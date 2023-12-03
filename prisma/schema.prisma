@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user     Int     @id @default(autoincrement())
+  name        String  @db.VarChar(45)
+  middle_name String? @db.VarChar(45)
+  user        String  @db.VarChar(45)
+  password    String  @db.VarChar(45)
+  id_profile  Int     @unique
+
+  profile Profile @relation(fields: [id_profile], references: [id_profile])
+}
+
+model Profile {
+  id_profile Int    @id @default(autoincrement())
+  name       String @db.VarChar(45)
+  user       User?
+}
+
+model Client {
+  client              Int       @id @default(autoincrement())
+  identification_type Int?
+  identification      String?   @db.VarChar(100)
+  social_reason       String?   @db.VarChar(100)
+  register_date       DateTime? @default(now()) @db.Date
+  state               String    @db.VarChar(1)
+
+  recipe  Recipes[]
+  id_type Identification_Type? @relation(fields: [identification_type], references: [identification_type])
+}
+
+model Identification_Type {
+  identification_type Int    @id @default(autoincrement())
+  abreviature         String @db.VarChar(3)
+  description         String @db.VarChar(100)
+
+  Client Client[]
+}
+
+model Recipes {
+  consecutive Int      @id @default(autoincrement())
+  client      Int
+  date        DateTime @default(now()) @db.Date
+
+  clients Client @relation(fields: [client], references: [client])
+
+  Recipe_Details Recipe_Details[]
+}
+
+model Products {
+  id         Int    @id @default(autoincrement())
+  name       String @db.VarChar(100)
+  state      String @db.VarChar(45)
+  unit_price Int
+
+  Recipe_Details Recipe_Details[]
+}
+
+model Recipe_Details {
+  consecutive Int
+  id_product  Int
+
+  quantity   Int
+  unit_price Int
+
+  recipes  Recipes  @relation(fields: [consecutive], references: [consecutive])
+  products Products @relation(fields: [id_product], references: [id])
+
+  @@id([consecutive, id_product])
+}
