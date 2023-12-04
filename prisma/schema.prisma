@@ -37,9 +37,9 @@ model Client {
 }
 
 model Identification_Type {
-  identification_type Int    @id @default(autoincrement())
-  abreviature         String @db.VarChar(3)
-  description         String @db.VarChar(100)
+  identification_type Int     @id @default(autoincrement())
+  abreviature         String  @db.VarChar(3)
+  description         String? @db.VarChar(100)
 
   Client Client[]
 }

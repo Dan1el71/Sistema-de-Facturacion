@@ -34,7 +34,7 @@ CREATE TABLE "Client" (
 CREATE TABLE "Identification_Type" (
     "identification_type" SERIAL NOT NULL,
     "abreviature" VARCHAR(3) NOT NULL,
-    "description" VARCHAR(100) NOT NULL,
+    "description" VARCHAR(100),
 
     CONSTRAINT "Identification_Type_pkey" PRIMARY KEY ("identification_type")
 );
