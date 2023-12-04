@@ -4,7 +4,7 @@ CREATE TABLE "User" (
     "name" VARCHAR(45) NOT NULL,
     "middle_name" VARCHAR(45),
     "user" VARCHAR(45) NOT NULL,
-    "password" VARCHAR(45) NOT NULL,
+    "password" VARCHAR(80) NOT NULL,
     "id_profile" INTEGER NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id_user")
@@ -67,9 +67,6 @@ CREATE TABLE "Recipe_Details" (
 
     CONSTRAINT "Recipe_Details_pkey" PRIMARY KEY ("consecutive","id_product")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_id_profile_key" ON "User"("id_profile");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_id_profile_fkey" FOREIGN KEY ("id_profile") REFERENCES "Profile"("id_profile") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -12,8 +12,8 @@ model User {
   name        String  @db.VarChar(45)
   middle_name String? @db.VarChar(45)
   user        String  @db.VarChar(45)
-  password    String  @db.VarChar(45)
-  id_profile  Int     @unique
+  password    String  @db.VarChar(80)
+  id_profile  Int
 
   profile Profile @relation(fields: [id_profile], references: [id_profile])
 }
@@ -21,7 +21,7 @@ model User {
 model Profile {
   id_profile Int    @id @default(autoincrement())
   name       String @db.VarChar(45)
-  user       User?
+  user       User[]
 }
 
 model Client {
