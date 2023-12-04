@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { requireAuth } from '../middlewares/requireAuth'
 import { validateSchema } from '../middlewares/validateSchema'
 import { getProfileSchema, newProfileSchema } from '../schemas/profile.schema'
 import { getProfile, newProfile } from '../controllers/profile.controller'
