@@ -38,6 +38,31 @@ const prisma = new PrismaClient().$extends({
         return await bcrypt.compare(password, hashedPasswod)
       },
     },
+    client: {
+      async createClient(
+        identification_type: number,
+        identification: string,
+        social_reason: string,
+        state: string
+      ) {
+        const validTypeID = await prisma.identification_Type.findFirst({
+          where: {
+            identification_type,
+          },
+        })
+
+        if (validTypeID) {
+          return await prisma.client.create({
+            data: {
+              identification_type,
+              identification,
+              social_reason,
+              state,
+            },
+          })
+        } else return null
+      },
+    },
   },
 })
 
