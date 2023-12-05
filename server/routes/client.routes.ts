@@ -27,7 +27,7 @@ route.get(
   getClient
 )
 route.get(
-  '/getClientById/:id',
+  '/getClientById/:idType/:id',
   requireAuth,
   validateSchema(getClientByIdSchema),
   getClientById
@@ -42,14 +42,14 @@ route.post(
 )
 
 route.put(
-  '/updateClient/:id',
+  '/updateClient/:idType/:id',
   requireAuth,
   validateSchema(updateClientSchema),
   updateClient
 )
 
 route.delete(
-  '/deleteClient/:id',
+  '/deleteClient/:idType/:id',
   requireAuth,
   validateSchema(deleteClientSchema),
   deleteClient

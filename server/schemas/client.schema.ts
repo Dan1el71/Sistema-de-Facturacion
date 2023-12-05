@@ -36,7 +36,16 @@ export const newClientSchema = z.object({
 export const getClientByIdSchema = z.object({
   params: z
     .object({
-      id: z.string({ required_error: 'Id is required' }),
+      id: z
+        .string({ required_error: 'Id is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Id must be a number',
+        }),
+      idType: z
+        .string({ required_error: 'Id type is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Id must be a number',
+        }),
     })
     .strict(),
   body: z.object({}).strict(),
@@ -45,6 +54,11 @@ export const getClientByIdSchema = z.object({
 export const updateClientSchema = z.object({
   params: z
     .object({
+      idType: z
+        .string({ required_error: 'Identification type is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Identification type must be a number',
+        }),
       id: z
         .string({ required_error: 'Id is required' })
         .refine((val) => !isNaN(parseInt(val)), {
@@ -78,7 +92,16 @@ export const updateClientSchema = z.object({
 export const deleteClientSchema = z.object({
   params: z
     .object({
-      id: z.string({ required_error: 'Id is required' }),
+      idType: z
+        .string({ required_error: 'Identification type is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Identification type must be a number',
+        }),
+      id: z
+        .string({ required_error: 'Id is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Id must be a number',
+        }),
     })
     .strict(),
   body: z.object({}).strict(),

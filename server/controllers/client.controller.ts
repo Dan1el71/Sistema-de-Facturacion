@@ -60,9 +60,11 @@ export const getClientById = async (
 ) => {
   try {
     const identification = req.params.id
+    const identification_type = parseInt(req.params.idType)
 
     const clientFound = await prisma.client.findFirst({
       where: {
+        identification_type,
         identification,
       },
     })
@@ -145,9 +147,11 @@ export const updateClient = async (
       req.body
 
     const client = parseInt(req.params.id)
+    const idType = parseInt(req.params.idType)
 
     const validClient = await prisma.client.findFirst({
       where: {
+        identification_type: idType,
         client,
       },
     })
@@ -193,9 +197,11 @@ export const deleteClient = async (
 ) => {
   try {
     const client = parseInt(req.params.id)
+    const identification_type = parseInt(req.params.idType)
 
     const validClient = await prisma.client.findFirst({
       where: {
+        identification_type,
         client,
       },
     })
