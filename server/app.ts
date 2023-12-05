@@ -4,6 +4,7 @@ import cors from 'cors'
 import { corsOptions } from './config'
 import authRoutes from './routes/auth.routes'
 import profileRoutes from './routes/profile.routes'
+import idTypeRoutes from './routes/idtypes.routes'
 
 const app = express()
 
@@ -15,5 +16,6 @@ app.use(express.json())
 //Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/idtypes', idTypeRoutes)
 
 export default app
