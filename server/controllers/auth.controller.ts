@@ -1,8 +1,10 @@
 import { Request, Response } from 'express'
 import {
+  deleteUserSchemaType,
   getUserSchemaType,
   loginHandlerSchemaType,
   newUserSchemaType,
+  updateUserSchemaType,
 } from '../schemas/auth.schema'
 import prisma from '../db'
 import jwt from 'jsonwebtoken'
@@ -59,7 +61,7 @@ export const newUser = async (
 
   return res.status(400).json({
     status: 'failed',
-    message: 'Invalid profile',
+    message: 'Invalid profile id',
   })
 }
 
@@ -119,12 +121,37 @@ export const getUser = async (
   res: Response
 ) => {
   try {
-    const id_user = parseInt(req.params.id) || req.user.id
+    const id = req.params.id
+    if (id) {
+      const id_user = parseInt(id)
 
-    const user = await prisma.user.findFirst({
-      where: {
-        id_user,
-      },
+      const userFound = await prisma.user.findFirst({
+        where: {
+          id_user,
+        },
+        select: {
+          id_user: true,
+          name: true,
+          middle_name: true,
+          user: true,
+          id_profile: true,
+        },
+      })
+      if (userFound)
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            userFound,
+          },
+        })
+
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      })
+    }
+
+    const users = await prisma.user.findMany({
       select: {
         id_user: true,
         name: true,
@@ -134,19 +161,132 @@ export const getUser = async (
       },
     })
 
-    if (user)
+    if (users)
       return res.status(200).json({
         status: 'success',
         data: {
-          user,
+          users,
         },
       })
 
-    return res.status(400).json({ status: 'failed', message: 'User not found' })
+    return res.status(400).json({ status: 'failed', message: 'Users not found' })
   } catch (err) {
     return res.status(400).json({
       status: 'failed',
       message: 'Invalid user',
+    })
+  }
+}
+
+export const updateUser = async (
+  req: Request<updateUserSchemaType>,
+  res: Response
+) => {
+  try {
+    const id_user = parseInt(req.params.id)
+    const { name, middle_name, user, password, id_profile } = req.body
+
+    const userFound = await prisma.user.findFirst({
+      where: {
+        id_user,
+      },
+    })
+
+    if (!userFound) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      })
+    }
+
+    const userExist = await prisma.user.findFirst({
+      where: {
+        user,
+      },
+    })
+
+    if (userExist && userExist.id_user !== id_user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User already exists',
+      })
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id_user,
+      },
+      data: {
+        name,
+        middle_name,
+        user,
+        password,
+        id_profile,
+      },
+    })
+
+    if (updatedUser)
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          updatedUser,
+        },
+      })
+
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Invalid profile id',
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Internal server error',
+    })
+  }
+}
+
+export const deleteUser = async (
+  req: Request<deleteUserSchemaType, any, any>,
+  res: Response
+) => {
+  try {
+    const id_user = parseInt(req.params.id)
+
+    const userFound = await prisma.user.findFirst({
+      where: {
+        id_user,
+      },
+    })
+
+    if (!userFound) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      })
+    }
+
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id_user,
+      },
+    })
+
+    if (deletedUser)
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          deletedUser,
+        },
+      })
+
+    return res.status(400).json({
+      status: 'failed',
+      message: 'User delete failed',
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Internal server error',
     })
   }
 }

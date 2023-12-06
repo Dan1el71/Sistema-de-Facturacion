@@ -32,10 +32,46 @@ export const loginHandlerSchema = z.object({
 })
 export const getUserSchema = z.object({
   params: z.object({
-    id: z.string({ required_error: 'ID is required' }).min(1),
+    id: z
+      .string({ required_error: 'ID is required' })
+      .min(1)
+      .refine((val) => !isNaN(parseInt(val)), {
+        message: 'ID must be a number',
+      }),
   }),
 })
 
+export const updateUserSchema = z.object({
+  params: z.object({
+    id: z
+      .string({ required_error: 'ID is required' })
+      .min(1)
+      .refine((val) => !isNaN(parseInt(val)), {
+        message: 'ID must be a number',
+      }),
+  }),
+  body: z.object({
+    name: z.string().min(2).max(45),
+    middle_name: z.string().min(4).max(45).optional(),
+    user: z.string().min(4).max(45),
+    password: z.string().min(5).max(45),
+    id_profile: z.number().int().positive(),
+  }),
+})
+
+export const deleteUserSchema = z.object({
+  params: z.object({
+    id: z
+      .string({ required_error: 'ID is required' })
+      .min(1)
+      .refine((val) => !isNaN(parseInt(val)), {
+        message: 'ID must be a number',
+      }),
+  }),
+})
+
+export type deleteUserSchemaType = z.infer<typeof deleteUserSchema>['params']
+export type updateUserSchemaType = z.infer<typeof updateUserSchema>['params']
 export type newUserSchemaType = z.infer<typeof newUserSchema>['body']
 export type loginHandlerSchemaType = z.infer<typeof loginHandlerSchema>['body']
 export type getUserSchemaType = z.infer<typeof getUserSchema>['params']
