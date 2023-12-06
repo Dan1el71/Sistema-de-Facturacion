@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes'
 import profileRoutes from './routes/profile.routes'
 import idTypeRoutes from './routes/idtypes.routes'
 import clientRoutes from './routes/client.routes'
+import productRoutes from './routes/product.routes'
 
 const app = express()
 
@@ -19,5 +20,6 @@ app.use('/api/auth', authRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/idtypes', idTypeRoutes)
 app.use('/api/client', clientRoutes)
+app.use('/api/product', productRoutes)
 
 export default app
