@@ -3,13 +3,21 @@ import { persist } from 'zustand/middleware'
 
 type State = {
   token: string
-  profile: object | null
+  profile: User | null
   isAuth: boolean
+}
+
+type User = {
+  id_user: number
+  name: string
+  middle_name: string | null
+  user: string
+  id_profile: number
 }
 
 type Actions = {
   setToken: (token: string) => void
-  setProfile: (profile: object) => void
+  setProfile: (profile: User) => void
   logout: () => void
 }
 
@@ -24,7 +32,7 @@ export const useAuthStore = create(
           token,
           isAuth: true,
         })),
-      setProfile: (profile: object) =>
+      setProfile: (profile: User) =>
         set(() => ({
           profile,
         })),
