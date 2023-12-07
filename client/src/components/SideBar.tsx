@@ -18,8 +18,8 @@ const SideBar = () => {
       icon: 'bi bi-person',
     },
     {
-      name: 'Facturas',
-      path: '/facturas',
+      name: 'Facturacion',
+      path: '/facturacion',
       icon: 'bi bi-file-earmark-text',
     },
     {
@@ -32,7 +32,7 @@ const SideBar = () => {
   return (
     <div className="bg-[#010409] w-72 h-screen ">
       <h1 className="text-center font-semibold text-xl py-5">Facturacion</h1>
-      <ul className='mt-6'>
+      <ul className="mt-6">
         {menuOptions.map((option) => (
           <li key={option.name}>
             <Link
