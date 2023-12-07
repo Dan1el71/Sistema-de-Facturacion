@@ -1,4 +1,4 @@
-import { login } from '../api/auth'
+import { getProfileName, login } from '../api/auth'
 import logo from '../assets/logo.svg'
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/auth'
@@ -12,6 +12,7 @@ const LoginPage = () => {
   const token = useAuthStore((status) => status.token)
   const setToken = useAuthStore((status) => status.setToken)
   const setProfile = useAuthStore((status) => status.setProfile)
+  const setRole = useAuthStore((status) => status.setRole)
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -19,7 +20,11 @@ const LoginPage = () => {
 
     try {
       const resLogin = await login(user, password)
+      const role = await (
+        await getProfileName(resLogin.data.user.id_profile)
+      ).data.profile.name
 
+      setRole(role)
       setToken(resLogin.data.token)
       setProfile(resLogin.data.user)
       setError(false)

@@ -6,3 +6,7 @@ export const login = async (user: string, password: string) => {
     password,
   })
 }
+
+export const getProfileName = async (id: number) => {
+  return axios.get('/profile/getProfile/' + id)
+}

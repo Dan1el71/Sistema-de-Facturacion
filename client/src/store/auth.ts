@@ -5,6 +5,7 @@ type State = {
   token: string
   profile: User | null
   isAuth: boolean
+  role: string
 }
 
 type User = {
@@ -18,6 +19,7 @@ type User = {
 type Actions = {
   setToken: (token: string) => void
   setProfile: (profile: User) => void
+  setRole: (role: string) => void
   logout: () => void
 }
 
@@ -27,6 +29,7 @@ export const useAuthStore = create(
       token: '',
       profile: null,
       isAuth: false,
+      role: '',
       setToken: (token: string) =>
         set(() => ({
           token,
@@ -36,6 +39,9 @@ export const useAuthStore = create(
         set(() => ({
           profile,
         })),
+      setRole: (role: string) => set(() => ({
+        role
+      })),
       logout: () =>
         set(() => ({
           token: '',
