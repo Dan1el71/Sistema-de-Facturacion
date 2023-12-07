@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/auth'
 import { useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
+import Error from '../components/Error'
 
 const LoginPage = () => {
   const [user, setUser] = useState('')
@@ -31,9 +32,11 @@ const LoginPage = () => {
 
       navigate('/')
     } catch (err: unknown) {
-      if (err instanceof AxiosError) {
+      if (
+        err instanceof AxiosError &&
+        err.response?.data.message === 'Authentication failed'
+      ) {
         setError(true)
-        console.error(err.response?.data.message)
       } else {
         setError(true)
         console.error(err)
@@ -50,7 +53,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     handleRedirect()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div className="w-full h-screen ">
@@ -63,17 +66,14 @@ const LoginPage = () => {
           <div className="text-xl font-extralight mb-4 text-center p-0">
             <h1>Ingreso de Usuarios</h1>
           </div>
-          {error && (
-            <div className="bg-[#25171C]  text-center rounded-md w-[300px] mx-auto mb-6 border-red-950 border">
-              <p className="p-4 text-sm">Usuario o contraseña incorrectos</p>
-            </div>
-          )}
+          {error && <Error>Usuario o contraseña incorrectos</Error>}
           <div className="bg-[#161B22] border border-[#161B22] rounded-md">
             <form className="p-4" onSubmit={handleSubmit}>
               <label htmlFor="login_field" className="text-sm font-light">
                 Username
               </label>
               <input
+                autoComplete="username"
                 value={user}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setUser(e.target.value)
@@ -86,6 +86,7 @@ const LoginPage = () => {
                 Password
               </label>
               <input
+                autoComplete="current-password"
                 value={password}
                 type="password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
