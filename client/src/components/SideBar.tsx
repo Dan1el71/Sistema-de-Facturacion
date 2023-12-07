@@ -1,6 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../store/auth'
 
 const SideBar = () => {
+  const logout = useAuthStore((state) => state.logout)
+  const navigate = useNavigate()
+
   const menuOptions = [
     {
       name: 'Clientes',
@@ -28,6 +32,12 @@ const SideBar = () => {
       icon: 'bi bi-file-earmark-bar-graph',
     },
   ]
+  const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    navigate('/login')
+    logout()
+  }
 
   return (
     <div className="bg-[#010409] w-72 h-screen ">
@@ -45,7 +55,10 @@ const SideBar = () => {
           </li>
         ))}
         <li>
-          <button className="flex items-center px-4 py-2 mx-2 hover:bg-[#171B20] rounded-md fixed bottom-2">
+          <button
+            onClick={handleClick}
+            className="flex items-center px-4 py-2 mx-2 hover:bg-[#171B20] rounded-md fixed bottom-2"
+          >
             <i className="bi bi-box-arrow-right mr-3"></i>
             Cerrar sesion
           </button>
