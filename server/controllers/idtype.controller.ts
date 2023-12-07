@@ -34,9 +34,7 @@ export const newIdType = async (
   if (newIdType)
     return res.status(201).json({
       status: 'success',
-      data: {
-        newIdType,
-      },
+      newIdType,
     })
 
   return res.status(400).json({
@@ -65,9 +63,7 @@ export const getIdType = async (
         if (idType) {
           return res.status(200).json({
             status: 'success',
-            data: {
-              idType,
-            },
+            idType,
           })
         }
       }
@@ -82,9 +78,7 @@ export const getIdType = async (
 
     return res.status(200).json({
       status: 'success',
-      data: {
-        idTypes,
-      },
+      idTypes,
     })
   } catch (err) {
     return res.status(400).json({

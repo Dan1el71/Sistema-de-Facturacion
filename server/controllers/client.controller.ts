@@ -26,9 +26,7 @@ export const getClient = async (
         if (clientFound) {
           return res.status(200).json({
             status: 'success',
-            data: {
-              clientFound,
-            },
+            clientFound,
           })
         }
         return res.status(400).json({
@@ -42,9 +40,7 @@ export const getClient = async (
 
     return res.status(200).json({
       status: 'success',
-      data: {
-        clients,
-      },
+      clients,
     })
   } catch (err) {
     res.status(500).json({
@@ -71,9 +67,7 @@ export const getClientById = async (
     if (clientFound) {
       return res.status(200).json({
         status: 'success',
-        data: {
-          clientFound,
-        },
+        clientFound,
       })
     }
 
@@ -120,9 +114,7 @@ export const newClient = async (
     if (newClient) {
       return res.status(200).json({
         status: 'success',
-        data: {
-          newClient,
-        },
+        newClient,
       })
     }
 
@@ -172,9 +164,7 @@ export const updateClient = async (
       if (updatedClient) {
         return res.status(200).json({
           status: 'success',
-          data: {
-            updatedClient,
-          },
+          updatedClient,
         })
       }
     }
@@ -215,9 +205,7 @@ export const deleteClient = async (
       if (deletedClient) {
         return res.status(200).json({
           status: 'success',
-          data: {
-            deletedClient,
-          },
+          deletedClient,
         })
       }
     }

@@ -47,14 +47,12 @@ export const newUser = async (
     return res.status(201).json({
       status: 'success',
       token,
-      data: {
-        user: {
-          id_user,
-          name,
-          middle_name,
-          user,
-          id_profile,
-        },
+      user: {
+        id_user,
+        name,
+        middle_name,
+        user,
+        id_profile,
       },
     })
   }
@@ -104,14 +102,12 @@ export const loginHandler = async (
   return res.status(200).json({
     status: 'success',
     token,
-    data: {
-      user: {
-        id_user,
-        name,
-        middle_name,
-        user,
-        id_profile,
-      },
+    user: {
+      id_user,
+      name,
+      middle_name,
+      user,
+      id_profile,
     },
   })
 }
@@ -140,9 +136,7 @@ export const getUser = async (
       if (userFound)
         return res.status(200).json({
           status: 'success',
-          data: {
-            userFound,
-          },
+          userFound,
         })
 
       return res.status(400).json({
@@ -164,12 +158,12 @@ export const getUser = async (
     if (users)
       return res.status(200).json({
         status: 'success',
-        data: {
-          users,
-        },
+        users,
       })
 
-    return res.status(400).json({ status: 'failed', message: 'Users not found' })
+    return res
+      .status(400)
+      .json({ status: 'failed', message: 'Users not found' })
   } catch (err) {
     return res.status(400).json({
       status: 'failed',
@@ -228,9 +222,7 @@ export const updateUser = async (
     if (updatedUser)
       return res.status(200).json({
         status: 'success',
-        data: {
-          updatedUser,
-        },
+        updatedUser,
       })
 
     return res.status(400).json({
@@ -274,9 +266,7 @@ export const deleteUser = async (
     if (deletedUser)
       return res.status(200).json({
         status: 'success',
-        data: {
-          deletedUser,
-        },
+        deletedUser,
       })
 
     return res.status(400).json({

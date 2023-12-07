@@ -39,9 +39,7 @@ export const createProduct = async (
       return res.status(201).json({
         status: 'success',
         message: 'Product created successfully',
-        data: {
-          newProduct,
-        },
+        newProduct,
       })
     } else {
       throw new Error('Product creation failed')
@@ -72,9 +70,7 @@ export const getProduct = async (
       if (productFound) {
         return res.status(200).json({
           status: 'success',
-          data: {
-            productFound,
-          },
+          productFound,
         })
       }
 
@@ -88,9 +84,7 @@ export const getProduct = async (
 
     return res.status(200).json({
       status: 'success',
-      data: {
-        products,
-      },
+      products,
     })
   } catch (err) {
     res.status(500).json({
@@ -148,9 +142,7 @@ export const updateProduct = async (
     if (updatedProduct) {
       return res.status(200).json({
         status: 'success',
-        data: {
-          updatedProduct,
-        },
+        updatedProduct,
       })
     } else {
       throw new Error('Product update failed')
@@ -192,9 +184,7 @@ export const deleteProduct = async (
     if (deletedProduct) {
       return res.status(200).json({
         status: 'success',
-        data: {
-          deletedProduct,
-        },
+        deletedProduct,
       })
     } else {
       throw new Error('Product deletion failed')

@@ -32,9 +32,7 @@ export const newProfile = async (
   if (newProfile)
     return res.status(201).json({
       status: 'success',
-      data: {
-        newProfile,
-      },
+      newProfile,
     })
 
   return res.status(400).json({
@@ -57,7 +55,10 @@ export const getProfile = async (
     })
 
     if (profile)
-      return res.status(200).json({ status: 'success', data: { profile } })
+      return res.status(200).json({
+        status: 'success',
+        profile,
+      })
 
     return res.status(400).json({
       status: 'failed',
