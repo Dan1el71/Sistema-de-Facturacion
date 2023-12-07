@@ -1,5 +1,5 @@
 import './styles/App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { useAuthStore } from './store/auth'
 
@@ -19,7 +19,7 @@ function App() {
       <div className="flex">
         <Routes>
           <Route path="/login" Component={LoginPage} />
-          <Route path="*" element={<h1>404</h1>} />
+          <Route path="*" element={<Navigate to='/'/>} />
           {/*
             Cajero
           */}
