@@ -206,18 +206,14 @@ export const updateUser = async (
       })
     }
 
-    const updatedUser = await prisma.user.update({
-      where: {
-        id_user,
-      },
-      data: {
-        name,
-        middle_name,
-        user,
-        password,
-        id_profile,
-      },
-    })
+    const updatedUser = await prisma.user.updateUser(
+      id_user,
+      name,
+      user,
+      password,
+      id_profile,
+      middle_name ? middle_name : undefined
+    )
 
     if (updatedUser)
       return res.status(200).json({
@@ -230,6 +226,7 @@ export const updateUser = async (
       message: 'Invalid profile id',
     })
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       status: 'failed',
       message: 'Internal server error',
