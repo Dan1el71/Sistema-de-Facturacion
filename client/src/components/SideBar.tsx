@@ -10,28 +10,40 @@ const SideBar = () => {
       name: 'Clientes',
       path: '/clientes',
       icon: 'bi bi-people',
+      rol: 2,
     },
     {
       name: 'Productos',
       path: '/productos',
       icon: 'bi bi-bag',
+      rol: 1,
     },
     {
       name: 'Usuarios',
       path: '/usuarios',
       icon: 'bi bi-person',
+      rol: 1,
     },
     {
       name: 'Facturacion',
       path: '/facturacion',
       icon: 'bi bi-file-earmark-text',
+      rol: 2,
     },
     {
       name: 'Reportes',
       path: '/reportes',
       icon: 'bi bi-file-earmark-bar-graph',
+      rol: 1,
     },
   ]
+  /* 
+    1: Administrador 2: Cajero 3: No tiene rol
+  */
+  const userRole = useAuthStore((state) => state.profile?.id_profile || 3)
+
+  const filteredOptions = menuOptions.filter((option) => option.rol >= userRole)
+
   const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
@@ -43,7 +55,7 @@ const SideBar = () => {
     <div className="bg-[#010409] w-72 h-screen ">
       <h1 className="text-center font-semibold text-xl py-5">Facturacion</h1>
       <ul className="mt-6">
-        {menuOptions.map((option) => (
+        {filteredOptions.map((option) => (
           <li key={option.name}>
             <Link
               to={option.path}

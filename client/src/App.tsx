@@ -20,12 +20,20 @@ function App() {
         <Routes>
           <Route path="/login" Component={LoginPage} />
           <Route path="*" element={<h1>404</h1>} />
-          <Route element={<ProtectedRoute isAllowed={isAuth} />}>
-            <Route path="" element={<HomePage />} />
+          {/*
+            Cajero
+          */}
+          <Route element={<ProtectedRoute isAllowed={isAuth} role={2} />}>
+            <Route index element={<HomePage />} />
             <Route path="/clientes" element={<ClientsPage />} />
+            <Route path="/facturacion" element={<FacturacionPage />} />
+          </Route>
+          {/*
+            Administrador
+          */}
+          <Route element={<ProtectedRoute isAllowed={isAuth} role={1} />}>
             <Route path="/productos" element={<ProdutsPage />} />
             <Route path="/usuarios" element={<UsersPage />} />
-            <Route path="/facturacion" element={<FacturacionPage />} />
             <Route path="/reportes" element={<ReportsPage />} />
           </Route>
         </Routes>
