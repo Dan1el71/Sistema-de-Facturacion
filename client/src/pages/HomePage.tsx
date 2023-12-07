@@ -8,9 +8,12 @@ const HomePage = () => {
 
   return (
     <div className="m-auto">
-      <div className="text-2xl font-bold">
+      <div className="text-2xl">
         <h1>
-          Bienvenido, {name} {middle_name}{' '}
+          Bienvenido,{' '}
+          <strong>
+            {name} {middle_name}
+          </strong>
         </h1>
       </div>
 
