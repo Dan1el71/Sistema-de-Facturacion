@@ -11,10 +11,3 @@ export const getProfileName = async (id: number) => {
   return axios.get('/profile/getProfile/' + id)
 }
 
-export const getIdTypes = async () => {
-  return axios.get('/idtypes/getIdType')
-}
-
-export const getClientById = async (idType: number, id: number) => {
-  return axios.get('/client/getClientById/' + idType + '/' + id)
-}
