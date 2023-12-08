@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getClientById, getIdTypes } from '../../api/auth'
+import { getClientById, getIdTypes } from '../../api/client'
 import { Client, Identification } from '../../types/types'
 import Error from '../Error'
 import { AxiosError } from 'axios'
