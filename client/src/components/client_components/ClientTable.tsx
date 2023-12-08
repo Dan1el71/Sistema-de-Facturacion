@@ -1,4 +1,4 @@
-import { Client } from '../types/types'
+import { Client } from '../../types/types'
 import {
   createColumnHelper,
   useReactTable,
