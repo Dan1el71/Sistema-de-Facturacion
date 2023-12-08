@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Client } from '../types/types'
 import ClientSearch from '../components/client_components/ClientSearch'
+import ProductTable from '../components/products_components/ProductTable'
 
 const FacturacionPage = () => {
   const [data, setData] = useState<Client[]>([])
@@ -14,6 +15,7 @@ const FacturacionPage = () => {
         <ClientSearch title="Seleccione un cliente" setData={setData} />
       </div>
       <div>
+        <ProductTable />
         {data.length > 0 && (
           <div className="mx-12">
             <div>
@@ -26,7 +28,13 @@ const FacturacionPage = () => {
               </p>
             </div>
             <div>
-              
+              <div>
+                <p className="break-normal pt-5 mb-4">
+                  <i className="pr-2 bi bi-search"></i>
+                  Agregue los productos a facturar
+                </p>
+              </div>
+              <div></div>
             </div>
           </div>
         )}
