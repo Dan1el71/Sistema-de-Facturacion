@@ -14,7 +14,7 @@ export const createProduct = async (
   try {
     const { name, state, unit_price } = req.body
 
-    const productExist = await prisma.products.findFirst({
+    const productExist = await prisma.product.findFirst({
       where: {
         name,
       },
@@ -27,7 +27,7 @@ export const createProduct = async (
       })
     }
 
-    const newProduct = await prisma.products.create({
+    const newProduct = await prisma.product.create({
       data: {
         name,
         state,
@@ -61,7 +61,7 @@ export const getProduct = async (
 
     if (_id) {
       const id = parseInt(_id)
-      const productFound = await prisma.products.findFirst({
+      const productFound = await prisma.product.findFirst({
         where: {
           id,
         },
@@ -80,13 +80,14 @@ export const getProduct = async (
       })
     }
 
-    const products = await prisma.products.findMany()
+    const products = await prisma.product.findMany()
 
     return res.status(200).json({
       status: 'success',
       products,
     })
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       status: 'failed',
       message: 'Internal server error',
@@ -102,7 +103,7 @@ export const updateProduct = async (
     const id = parseInt(req.params.id)
     const { name, state, unit_price } = req.body
 
-    const productFound = await prisma.products.findFirst({
+    const productFound = await prisma.product.findFirst({
       where: {
         id,
       },
@@ -115,7 +116,7 @@ export const updateProduct = async (
       })
     }
 
-    const productExists = await prisma.products.findFirst({
+    const productExists = await prisma.product.findFirst({
       where: {
         name,
       },
@@ -128,7 +129,7 @@ export const updateProduct = async (
       })
     }
 
-    const updatedProduct = await prisma.products.update({
+    const updatedProduct = await prisma.product.update({
       where: {
         id,
       },
@@ -162,7 +163,7 @@ export const deleteProduct = async (
   try {
     const id = parseInt(req.params.id)
 
-    const productFound = await prisma.products.findFirst({
+    const productFound = await prisma.product.findFirst({
       where: {
         id,
       },
@@ -175,7 +176,7 @@ export const deleteProduct = async (
       })
     }
 
-    const deletedProduct = await prisma.products.delete({
+    const deletedProduct = await prisma.product.delete({
       where: {
         id,
       },

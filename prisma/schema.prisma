@@ -32,7 +32,7 @@ model Client {
   register_date       DateTime? @default(now()) @db.Date
   state               String    @db.VarChar(1)
 
-  recipe  Invoices[]
+  recipe  Invoice[]
   id_type Identification_Type? @relation(fields: [identification_type], references: [identification_type])
 }
 
@@ -44,34 +44,34 @@ model Identification_Type {
   Client Client[]
 }
 
-model Invoices {
+model Invoice {
   consecutive Int      @id @default(autoincrement())
   client      Int
   date        DateTime @default(now()) @db.Date
 
   clients Client @relation(fields: [client], references: [client])
 
-  Recipe_Details Invoice_Details[]
+  Recipe_Details InvoiceDetails[]
 }
 
-model Products {
+model Product {
   id         Int    @id @default(autoincrement())
   name       String @db.VarChar(100)
   state      String @db.VarChar(45)
   unit_price Int
 
-  Recipe_Details Invoice_Details[]
+  Recipe_Details InvoiceDetails[]
 }
 
-model Invoice_Details {
+model InvoiceDetails {
   consecutive Int
   id_product  Int
 
   quantity   Int
   unit_price Int
 
-  invoice  Invoices @relation(fields: [consecutive], references: [consecutive])
-  products Products @relation(fields: [id_product], references: [id])
+  invoice  Invoice @relation(fields: [consecutive], references: [consecutive])
+  products Product @relation(fields: [id_product], references: [id])
 
   @@id([consecutive, id_product])
 }
