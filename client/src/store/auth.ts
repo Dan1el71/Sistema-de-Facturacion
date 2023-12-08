@@ -1,27 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-type State = {
-  token: string
-  profile: User | null
-  isAuth: boolean
-  role: string
-}
-
-type User = {
-  id_user: number
-  name: string
-  middle_name: string | null
-  user: string
-  id_profile: number
-}
-
-type Actions = {
-  setToken: (token: string) => void
-  setProfile: (profile: User) => void
-  setRole: (role: string) => void
-  logout: () => void
-}
+import { Actions, State, User } from '../types/types'
 
 export const useAuthStore = create(
   persist<State & Actions>(
@@ -39,9 +18,10 @@ export const useAuthStore = create(
         set(() => ({
           profile,
         })),
-      setRole: (role: string) => set(() => ({
-        role
-      })),
+      setRole: (role: string) =>
+        set(() => ({
+          role,
+        })),
       logout: () =>
         set(() => ({
           token: '',
