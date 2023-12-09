@@ -21,27 +21,45 @@ const EditCell = ({ row, table }: EditCellProps) => {
   }
 
   return (
-    <div className="edit-cell-container">
+    <div className="flex gap-4 justify-center w-full">
       {meta?.editedRows[rowId] ? (
-        <div className="edit-cell">
-          <button onClick={setEditedRows} name="cancel">
-            <i className="bi bi-x-circle"></i>
-          </button>
-          <button onClick={setEditedRows} name="done">
+        <div className="flex gap-5">
+          <button
+            className="bg-green-400 rounded-full px-1"
+            onClick={setEditedRows}
+            name="done"
+          >
             <i className="bi bi-check-circle"></i>{' '}
+          </button>
+          <button
+            className="bg-red-400 rounded-full px-1"
+            onClick={setEditedRows}
+            name="cancel"
+          >
+            <i className="bi bi-x-circle"></i>
           </button>
         </div>
       ) : (
-        <div>
-          <button onClick={setEditedRows} name="edit">
+        <div className="flex gap-5 ">
+          <button
+            className="bg-red-400 rounded-full px-1"
+            onClick={setEditedRows}
+            name="edit"
+          >
             <i className="bi bi-pencil"></i>
           </button>
-          <button onClick={removeRow} name="remove">
+          <button
+            className="bg-green-400 rounded-full px-1"
+            onClick={removeRow}
+            name="remove"
+          >
             <i className="bi bi-trash"></i>
           </button>
         </div>
       )}
       <input
+        id={`select-${row.id}`}
+        className="w-4 h-4 self-center"
         type="checkbox"
         checked={row.getIsSelected()}
         onChange={row.getToggleSelectedHandler()}

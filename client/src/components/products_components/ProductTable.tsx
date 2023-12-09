@@ -5,10 +5,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { Invoice } from '../../types/types'
+import { Invoice, Product, ProductTableProps } from '../../types/types'
 import defaultColumn from './DefaultColumn'
 import EditCell from './EditCellColumn'
 import { FooterCell } from './FooterCell'
+import { getProductById } from '../../api/product'
 
 const columnHelper = createColumnHelper<Invoice>()
 
@@ -50,32 +51,10 @@ const columns = [
   }),
 ]
 
-const ProductTable = () => {
-  const [tableData, setTableData] = useState([
-    {
-      id_product: 1,
-      name: 'Producto 1',
-      quantity: 1,
-      unitPrice: 1000,
-      total: 1000,
-    },
-    {
-      id_product: 2,
-      name: 'Producto 2',
-      quantity: 2,
-      unitPrice: 2000,
-      total: 4000,
-    },
-    {
-      id_product: 3,
-      name: 'Producto 3',
-      quantity: 3,
-      unitPrice: 3000,
-      total: 9000,
-    },
-  ])
-  const [originalData, setOriginalData] = useState(tableData)
+const ProductTable = ({ tableData, setTableData }: ProductTableProps) => {
+  const [originalData, setOriginalData] = useState<Invoice[]>(tableData)
   const [editedRows, setEditedRows] = useState<Record<number, boolean>>({})
+  const [error, setError] = useState<boolean>(false)
 
   const table = useReactTable({
     data: tableData,
@@ -83,6 +62,8 @@ const ProductTable = () => {
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
     meta: {
+      error,
+      setError,
       editedRows,
       setEditedRows,
       revertData: (rowIndex: number, revert: boolean) => {
@@ -101,29 +82,42 @@ const ProductTable = () => {
         }
       },
       updateData: (rowIndex: number, columnId: string, value: unknown) => {
-        setTableData((old) =>
-          old.map((row, index) => {
-            if (index == rowIndex) {
+        setTableData((old: Invoice[]) =>
+          old.map((row: Invoice, index: number) => {
+            if (index === rowIndex && columnId === 'quantity') {
               return {
-                ...old[rowIndex],
-                [columnId]: value,
+                ...row,
+                quantity: value as number,
+                total: ((value as number) || 0) * (row.unitPrice || 0),
               }
             }
             return row
           })
         )
       },
-      addRow: () => {
-        const newRow: Invoice = {
-          id_product: 0,
-          name: '',
-          quantity: 0,
-          unitPrice: 0,
-          total: 0,
+      addRow: async (id: number) => {
+        try {
+          const productInfo: Product = await (
+            await getProductById(id)
+          ).data.productFound
+
+          const newRow: Invoice = {
+            id_product: productInfo.id,
+            name: productInfo.name,
+            quantity: 0,
+            unitPrice: productInfo.unit_price,
+            total: 0,
+          }
+          const setFunc = (old: Invoice[]) => [...old, newRow]
+          setEditedRows((old: Record<number, boolean>) => ({
+            ...old,
+            [Object.keys(tableData).length]: true,
+          }))
+          setTableData(setFunc)
+          setOriginalData(setFunc)
+        } catch (err) {
+          setError(true)
         }
-        const setFunc = (old: Invoice[]) => [...old, newRow]
-        setTableData(setFunc)
-        setOriginalData(setFunc)
       },
       removeRow: (rowIndex: number) => {
         const setFilterFunc = (old: Invoice[]) =>
@@ -162,7 +156,7 @@ const ProductTable = () => {
         {table.getRowModel().rows.map((row) => (
           <tr key={row.id} className="hover:bg-[#171B20]">
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="py-2 px-4 border">
+              <td key={cell.id} className="py-1 border">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}

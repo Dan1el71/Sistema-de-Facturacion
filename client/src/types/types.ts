@@ -56,11 +56,13 @@ export type Invoice = {
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
+    error: boolean
+    setError: React.Dispatch<React.SetStateAction<boolean>>
     editedRows: Record<number, boolean>
     setEditedRows: React.Dispatch<React.SetStateAction<Record<number, boolean>>>
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
     revertData: (rowIndex: number, revert: boolean) => void
-    addRow: () => void
+    addRow: (id: number) => void
     removeRow: (rowIndex: number) => void
     removeSelectedRows: (selectedRows: number[]) => void
   }
@@ -71,6 +73,21 @@ declare module '@tanstack/react-table' {
   }
 }
 
+export type ProductTableProps = {
+  tableData: Invoice[]
+  setTableData: React.Dispatch<
+    React.SetStateAction<
+      {
+        id_product: number
+        name: string
+        quantity: number
+        unitPrice: number
+        total: number
+      }[]
+    >
+  >
+}
+
 export type FooterCellProps = {
   table: Table<Invoice>
 }
@@ -78,4 +95,9 @@ export type FooterCellProps = {
 export type EditCellProps = {
   row: Row<Invoice>
   table: Table<Invoice>
+}
+
+export type ProductErrorProps = {
+  id?: string
+  message?: string
 }
