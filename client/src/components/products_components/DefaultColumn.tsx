@@ -17,10 +17,10 @@ const defaultColumn: Partial<ColumnDef<Invoice>> = {
       setValue(initialValue)
     }, [initialValue])
 
-    if (columnDef.meta?.editable) {
+    if (columnDef.meta?.editable && table.options.meta?.editedRows[index]) {
       return (
         <input
-          className="w-full text-center bg-[#0d1117] rounded-md border border-gray-800"
+          className="text-center w-fit bg-[#0d1117] rounded-md border border-gray-800"
           value={value as string}
           onChange={(e) => {
             setValue(e.target.value)

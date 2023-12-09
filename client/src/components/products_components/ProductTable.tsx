@@ -73,7 +73,8 @@ const ProductTable = () => {
       total: 9000,
     },
   ])
-  const [editedRows, setEditedRows] = useState<Record<string, boolean>>({})
+  const [originalData, setOriginalData] = useState(tableData)
+  const [editedRows, setEditedRows] = useState<Record<number, boolean>>({})
 
   const table = useReactTable({
     data: tableData,
@@ -83,6 +84,21 @@ const ProductTable = () => {
     meta: {
       editedRows,
       setEditedRows,
+      revertData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setTableData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? originalData[rowIndex] : row
+            )
+          )
+        } else {
+          setOriginalData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? tableData[rowIndex] : row
+            )
+          )
+        }
+      },
       updateData: (rowIndex: number, columnId: string, value: unknown) => {
         setTableData((old) =>
           old.map((row, index) => {

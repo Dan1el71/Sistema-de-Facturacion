@@ -8,12 +8,15 @@ type EditCellProps = {
 
 const EditCell = ({ row, table }: EditCellProps) => {
   const meta = table.options.meta
+  const rowId = Number(row.id)
+
   const setEditedRows = (e: React.MouseEvent<HTMLButtonElement>) => {
     const elName = e.currentTarget.name
-    meta?.setEditedRows((old: []) => ({
+    meta?.setEditedRows((old: Record<number, boolean>) => ({
       ...old,
-      [row.id]: !old[row.id],
+      [row.id]: !old[rowId],
     }))
+
     if (elName !== 'edit') {
       meta?.revertData(row.index, e.currentTarget.name === 'cancel')
     }
@@ -21,7 +24,7 @@ const EditCell = ({ row, table }: EditCellProps) => {
 
   return (
     <div className="edit-cell-container">
-      {meta?.editedRows[row.id] ? (
+      {meta?.editedRows[rowId] ? (
         <div className="edit-cell">
           <button onClick={setEditedRows} name="cancel">
             X

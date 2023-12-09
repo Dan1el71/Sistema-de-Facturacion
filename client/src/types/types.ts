@@ -55,9 +55,10 @@ export type Invoice = {
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
-    editedRows: object
+    editedRows: Record<number, boolean>
     setEditedRows: React.Dispatch<React.SetStateAction<Record<number, boolean>>>
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
+    revertData: (rowIndex: number, revert: boolean) => void
   }
 
   interface ColumnMeta<TData extends RowData, TValue> {
