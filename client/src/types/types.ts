@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { RowData } from '@tanstack/react-table'
+import { Row } from '@tanstack/react-table'
+import { RowData, Table } from '@tanstack/react-table'
 
 export type State = {
   token: string
@@ -59,10 +60,20 @@ declare module '@tanstack/react-table' {
     setEditedRows: React.Dispatch<React.SetStateAction<Record<number, boolean>>>
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
     revertData: (rowIndex: number, revert: boolean) => void
+    addRow: () => void
   }
 
   interface ColumnMeta<TData extends RowData, TValue> {
     type?: string
     editable?: boolean | false
   }
+}
+
+export type FooterCellProps = {
+  table: Table<Invoice>
+}
+
+export type EditCellProps = {
+  row: Row<Invoice>
+  table: Table<Invoice>
 }
