@@ -61,6 +61,8 @@ declare module '@tanstack/react-table' {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
     revertData: (rowIndex: number, revert: boolean) => void
     addRow: () => void
+    removeRow: (rowIndex: number) => void
+    removeSelectedRows: (selectedRows: number[]) => void
   }
 
   interface ColumnMeta<TData extends RowData, TValue> {

@@ -125,6 +125,18 @@ const ProductTable = () => {
         setTableData(setFunc)
         setOriginalData(setFunc)
       },
+      removeRow: (rowIndex: number) => {
+        const setFilterFunc = (old: Invoice[]) =>
+          old.filter((_row: Invoice, index: number) => index !== rowIndex)
+        setTableData(setFilterFunc)
+        setOriginalData(setFilterFunc)
+      },
+      removeSelectedRows: (selectedRows: number[]) => {
+        const setFilterFunc = (old: Invoice[]) =>
+          old.filter((_row, index) => !selectedRows.includes(index))
+        setTableData(setFilterFunc)
+        setOriginalData(setFilterFunc)
+      },
     },
   })
 

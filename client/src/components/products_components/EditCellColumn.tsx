@@ -16,6 +16,10 @@ const EditCell = ({ row, table }: EditCellProps) => {
     }
   }
 
+  const removeRow = () => {
+    meta?.removeRow(row.index)
+  }
+
   return (
     <div className="edit-cell-container">
       {meta?.editedRows[rowId] ? (
@@ -28,10 +32,20 @@ const EditCell = ({ row, table }: EditCellProps) => {
           </button>
         </div>
       ) : (
-        <button onClick={setEditedRows} name="edit">
-          <i className="bi bi-pencil"></i>
-        </button>
+        <div>
+          <button onClick={setEditedRows} name="edit">
+            <i className="bi bi-pencil"></i>
+          </button>
+          <button onClick={removeRow} name="remove">
+            <i className="bi bi-trash"></i>
+          </button>
+        </div>
       )}
+      <input
+        type="checkbox"
+        checked={row.getIsSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
     </div>
   )
 }
