@@ -1,10 +1,4 @@
-import { Row, Table } from '@tanstack/react-table'
-import { Invoice } from '../../types/types'
-
-type EditCellProps = {
-  row: Row<Invoice>
-  table: Table<Invoice>
-}
+import { EditCellProps } from '../../types/types'
 
 const EditCell = ({ row, table }: EditCellProps) => {
   const meta = table.options.meta
@@ -27,15 +21,15 @@ const EditCell = ({ row, table }: EditCellProps) => {
       {meta?.editedRows[rowId] ? (
         <div className="edit-cell">
           <button onClick={setEditedRows} name="cancel">
-            X
+            <i className="bi bi-x-circle"></i>
           </button>
           <button onClick={setEditedRows} name="done">
-            ✔
+            <i className="bi bi-check-circle"></i>{' '}
           </button>
         </div>
       ) : (
         <button onClick={setEditedRows} name="edit">
-          ✐
+          <i className="bi bi-pencil"></i>
         </button>
       )}
     </div>
