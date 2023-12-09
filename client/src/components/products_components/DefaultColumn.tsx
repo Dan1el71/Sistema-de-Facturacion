@@ -6,11 +6,26 @@ import { useEffect, useState } from 'react'
 const defaultColumn: Partial<ColumnDef<Invoice>> = {
   cell: ({ getValue, row: { index }, column: { id, columnDef }, table }) => {
     const initialValue = getValue()
-
     const [value, setValue] = useState(initialValue)
 
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value)
+      table.options.meta?.setEditedRows((old) => ({
+        ...old,
+        [index]: false,
+      }))
+    }
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onBlur()
+      } else if (e.key === 'Escape') {
+        setValue(initialValue)
+        table.options.meta?.setEditedRows((old) => ({
+          ...old,
+          [index]: false,
+        }))
+      }
     }
 
     useEffect(() => {
@@ -26,6 +41,7 @@ const defaultColumn: Partial<ColumnDef<Invoice>> = {
             setValue(e.target.value)
           }}
           onBlur={onBlur}
+          onKeyDown={onKeyDown}
           type={columnDef.meta?.type}
         />
       )
