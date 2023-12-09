@@ -5,7 +5,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'green-button': '#238636',
+        'green-button-hover': '#2EA043',
+      }
+    },
   },
   plugins: [],
 }
