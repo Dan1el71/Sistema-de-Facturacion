@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { Invoice } from '../../types/types'
 import defaultColumn from './DefaultColumn'
 import EditCell from './EditCellColumn'
+import { FooterCell } from './FooterCell'
 
 const columnHelper = createColumnHelper<Invoice>()
 
@@ -112,6 +113,18 @@ const ProductTable = () => {
           })
         )
       },
+      addRow: () => {
+        const newRow: Invoice = {
+          id_product: 0,
+          name: '',
+          quantity: 0,
+          unitPrice: 0,
+          total: 0,
+        }
+        const setFunc = (old: Invoice[]) => [...old, newRow]
+        setTableData(setFunc)
+        setOriginalData(setFunc)
+      },
     },
   })
 
@@ -144,6 +157,13 @@ const ProductTable = () => {
           </tr>
         ))}
       </tbody>
+      <tfoot>
+        <tr>
+          <th colSpan={table.getCenterLeafColumns().length} align="right">
+            <FooterCell table={table} />
+          </th>
+        </tr>
+      </tfoot>
     </table>
   )
 }
