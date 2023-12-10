@@ -1,8 +1,8 @@
-import { getProfileName, login } from '../api/auth'
+import { login } from '../api/auth'
 import logo from '../assets/logo.svg'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuthStore } from '../store/auth'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import Error from '../components/Error'
 
@@ -12,8 +12,6 @@ const LoginPage = () => {
   const [error, setError] = useState(false)
   const token = useAuthStore((status) => status.token)
   const setToken = useAuthStore((status) => status.setToken)
-  const setProfile = useAuthStore((status) => status.setProfile)
-  const setRole = useAuthStore((status) => status.setRole)
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,13 +19,7 @@ const LoginPage = () => {
 
     try {
       const resLogin = await login(user, password)
-      const role = await (
-        await getProfileName(resLogin.data.user.id_profile)
-      ).data.profile.name
-
-      setRole(role)
       setToken(resLogin.data.token)
-      setProfile(resLogin.data.user)
       setError(false)
 
       navigate('/')
@@ -45,16 +37,12 @@ const LoginPage = () => {
     setUser('')
     setPassword('')
   }
-  const handleRedirect = () => {
-    if (token) {
-      navigate('/')
-    }
+
+  if (token) {
+    console.log("Already loged in")
+    return <Navigate to="/" />
   }
 
-  useEffect(() => {
-    handleRedirect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   return (
     <div className="w-full h-screen ">
       <div className="pt-8 pb-6 w-full">

@@ -40,7 +40,7 @@ const SideBar = () => {
   /* 
     1: Administrador 2: Cajero 3: No tiene rol
   */
-  const userRole = useAuthStore((state) => state.profile?.id_profile || 3)
+  const userRole = useAuthStore((state) => state.profile?.role || 3)
 
   const filteredOptions = menuOptions.filter((option) => option.rol >= userRole)
 

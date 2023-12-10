@@ -1,23 +1,45 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import SideBar from './SideBar'
 import { useAuthStore } from '../store/auth'
+import { getUserProfile } from '../api/auth'
 
 interface Props {
   isAllowed: boolean
   children?: React.ReactNode
-  role: number
+  requiredRole: number
 }
 
-export const ProtectedRoute = ({ isAllowed, children, role }: Props) => {
-  const userRole = useAuthStore((state) => state.profile?.id_profile || 3)
+export const ProtectedRoute = ({
+  isAllowed,
+  children,
+  requiredRole,
+}: Props) => {
+  const navigate = useNavigate()
+  const userProfile = useAuthStore((state) => state.profile)
+  const setUserProfile = useAuthStore((state) => state.setProfile)
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data } = await getUserProfile()
+        setUserProfile(data.userProfile)
+      } catch (err) {
+        navigate('/login')
+      }
+    }
+
+    loadProfile()
+  }, [navigate, setUserProfile])
 
   if (!isAllowed) return <Navigate to="/login" />
-  if (role < userRole) return <Navigate to="/" />
+  if (userProfile?.role && requiredRole < userProfile.role)
+    return <Navigate to="/" />
 
   return (
     <>
       <SideBar />
-      {children ? children : <Outlet />}
+      {children || <Outlet />}
     </>
   )
 }

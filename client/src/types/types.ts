@@ -6,22 +6,20 @@ export type State = {
   token: string
   profile: User | null
   isAuth: boolean
-  role: string
 }
 
 export type Actions = {
   setToken: (token: string) => void
   setProfile: (profile: User) => void
-  setRole: (role: string) => void
   logout: () => void
 }
 
 export type User = {
-  id_user: number
+  _id: number
   name: string
-  middle_name: string | null
-  user: string
-  id_profile: number
+  role: number
+  iat: number
+  exp: number
 }
 
 export type Identification = {

@@ -2,18 +2,14 @@ import { useAuthStore } from '../store/auth'
 
 const HomePage = () => {
   const user = useAuthStore((state) => state.profile)
-  const rol = useAuthStore((state) => state.role)
+  const rol = user?.role
   const name = user?.name.toUpperCase()
-  const middle_name = user?.middle_name?.toUpperCase()
 
   return (
     <div className="m-auto">
       <div className="text-2xl">
         <h1>
-          Bienvenido,{' '}
-          <strong>
-            {name} {middle_name}
-          </strong>
+          Bienvenido, <strong>{name}</strong>
         </h1>
       </div>
 

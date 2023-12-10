@@ -3,9 +3,11 @@ import { useState } from 'react'
 import { Client } from '../types/types'
 import ClientTable from '../components/client_components/ClientTable'
 import ClientSearch from '../components/client_components/ClientSearch'
+import { useAuthStore } from '../store/auth'
 
 const ClientsPage = () => {
   const [idData, setIdData] = useState<Client[]>([])
+  const role = useAuthStore((state) => state.role)
 
   return (
     <div className="flex-auto overflow-y-scroll h-screen">
@@ -20,6 +22,7 @@ const ClientsPage = () => {
           {Object.keys(idData).length > 0 && <ClientTable data={idData} />}
         </div>
       </div>
+      {role === 'Administrador' && <div>hola mundo</div>}
     </div>
   )
 }

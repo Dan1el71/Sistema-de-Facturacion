@@ -8,7 +8,6 @@ export const useAuthStore = create(
       token: '',
       profile: null,
       isAuth: false,
-      role: '',
       setToken: (token: string) =>
         set(() => ({
           token,
@@ -17,10 +16,6 @@ export const useAuthStore = create(
       setProfile: (profile: User) =>
         set(() => ({
           profile,
-        })),
-      setRole: (role: string) =>
-        set(() => ({
-          role,
         })),
       logout: () =>
         set(() => ({

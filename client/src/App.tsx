@@ -19,11 +19,11 @@ function App() {
       <div className="flex">
         <Routes>
           <Route path="/login" Component={LoginPage} />
-          <Route path="*" element={<Navigate to='/'/>} />
+          <Route path="*" element={<Navigate to="/" />} />
           {/*
             Cajero
           */}
-          <Route element={<ProtectedRoute isAllowed={isAuth} role={2} />}>
+          <Route element={<ProtectedRoute isAllowed={isAuth} requiredRole={2} />}>
             <Route index element={<HomePage />} />
             <Route path="/clientes" element={<ClientsPage />} />
             <Route path="/facturacion" element={<FacturacionPage />} />
@@ -31,7 +31,7 @@ function App() {
           {/*
             Administrador
           */}
-          <Route element={<ProtectedRoute isAllowed={isAuth} role={1} />}>
+          <Route element={<ProtectedRoute isAllowed={isAuth} requiredRole={1} />}>
             <Route path="/productos" element={<ProdutsPage />} />
             <Route path="/usuarios" element={<UsersPage />} />
             <Route path="/reportes" element={<ReportsPage />} />

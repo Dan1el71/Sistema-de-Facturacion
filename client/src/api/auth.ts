@@ -7,7 +7,6 @@ export const login = async (user: string, password: string) => {
   })
 }
 
-export const getProfileName = async (id: number) => {
-  return axios.get('/profile/getProfile/' + id)
+export const getUserProfile = async () => {
+  return axios.get('/auth/getUserProfile')
 }
-
