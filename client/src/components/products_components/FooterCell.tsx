@@ -59,7 +59,6 @@ export const FooterCell = ({ table }: FooterCellProps) => {
       </div>
       <div className="flex items-center mt-3">
         <span className="mx-4">
-          {' '}
           <i className="pr-2 bi bi-cash"></i>Total facturado: ${total}
         </span>
         {selectedRows.length > 0 && (
