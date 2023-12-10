@@ -5,7 +5,7 @@ import ClientTable from '../components/client_components/ClientTable'
 import ClientSearch from '../components/client_components/ClientSearch'
 
 const ClientsPage = () => {
-  const [data, setData] = useState<Client[]>([])
+  const [idData, setIdData] = useState<Client[]>([])
 
   return (
     <div className="flex-auto overflow-y-scroll h-screen">
@@ -14,10 +14,10 @@ const ClientsPage = () => {
       </div>
       <div id="Consultar">
         <div>
-          <ClientSearch title='Consultar cliente' setData={setData} />
+          <ClientSearch title="Consultar cliente" setIdData={setIdData} />
         </div>
         <div className="mx-12">
-          {Object.keys(data).length > 0 && <ClientTable data={data} />}
+          {Object.keys(idData).length > 0 && <ClientTable data={idData} />}
         </div>
       </div>
     </div>

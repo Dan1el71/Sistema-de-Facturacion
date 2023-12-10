@@ -33,7 +33,9 @@ const ClientSearch = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIdData([])
-    setTableData([])
+    if (setTableData) {
+      setTableData([])
+    }
 
     if (idType !== null && id !== null) {
       try {
