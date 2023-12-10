@@ -6,10 +6,10 @@ import { AxiosError } from 'axios'
 
 interface Props {
   title: string
-  setData: React.Dispatch<React.SetStateAction<Client[]>>
+  setIdData: React.Dispatch<React.SetStateAction<Client[]>>
 }
 
-const ClientSearch = ({ title, setData }: Props) => {
+const ClientSearch = ({ title, setIdData }: Props) => {
   const [id, setId] = useState<string | null>(null)
   const [idType, setIdType] = useState<number | null>(null)
   const [error, setError] = useState(false)
@@ -33,7 +33,7 @@ const ClientSearch = ({ title, setData }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setData([])
+    setIdData([])
 
     if (idType !== null && id !== null) {
       try {
@@ -50,8 +50,8 @@ const ClientSearch = ({ title, setData }: Props) => {
           register_date: formattedDate,
           identification_type: getIdentificationAbbr(idType),
         }
-
-        setData([formattedData])
+        console.log(formattedData)
+        setIdData([formattedData])
       } catch (err) {
         if (err instanceof AxiosError) {
           setError(true)
