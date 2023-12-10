@@ -3,22 +3,64 @@ import { Client, Invoice, InvoiceDetails } from '../types/types'
 import ClientSearch from '../components/client_components/ClientSearch'
 import ProductTable from '../components/products_components/ProductTable'
 import Swal from 'sweetalert2'
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import autoTable from 'jspdf-autotable'
+import { newInvoiceDetails } from '../api/product'
 
 const FacturacionPage = () => {
   const [idData, setIdData] = useState<Client[]>([])
   const [tableData, setTableData] = useState<Invoice[]>([])
 
+  const exportPDF = () => {
+    const total = tableData
+      .reduce((acc, product) => acc + product.unitPrice * product.quantity, 0)
+      .toLocaleString()
+
+    const unit = 'pt'
+    const size = 'A4'
+    const orientation = 'portrait'
+
+    const marginLeft = 40
+    const doc = new jsPDF(orientation, unit, size)
+
+    const title = 'Comprobante de Facturacion'
+    const headers = [['ID', 'Name', 'Quantity', 'Unit Price', 'Total']]
+    const foot = [['', '', '', 'Total facturado:', `$ ${total}`]]
+
+    const data = tableData.map((elt) => [
+      elt.id_product,
+      elt.name,
+      elt.quantity,
+      '$ ' + elt.unitPrice,
+      '$ ' + elt.total.toLocaleString(),
+    ])
+
+    const content = {
+      startY: 50,
+      head: headers,
+      body: data,
+      foot,
+    }
+
+    doc.text(title, marginLeft, 40)
+    autoTable(doc, content)
+    doc.save('comprobante.pdf')
+  }
+
   const saveInvoiceDetails = async () => {
     const invoiceDetails: InvoiceDetails = {
-      consecutive: idData[0].client,
+      clientId: idData[0].client,
       products: tableData.map((product) => ({
         productId: product.id_product,
-        quantity: product.quantity,
-        unit_price: product.unitPrice,
+        quantity: parseInt(product.quantity as unknown as string),
+        unitPrice: parseInt(product.unitPrice as unknown as string),
       })),
     }
 
-    console.log(invoiceDetails)
+    await newInvoiceDetails(invoiceDetails)
+    exportPDF()
+
     const alert = await Swal.fire({
       title: 'Hecho!',
       text: 'Factura guardada correctamente',
@@ -68,12 +110,10 @@ const FacturacionPage = () => {
             <div className="mt-3 flex justify-between">
               <button
                 onClick={saveInvoiceDetails}
-                className="bg-green-button hover:bg-green-button-hover rounded-md px-3 py-2"
+                className="bg-blue-600 hover:bg-blue-700 rounded-md px-3 py-2"
               >
-                <i className="bi bi-save"></i> <span>Guardar</span>
-              </button>
-              <button>
-                <i className="bi bi-printer"></i> <span>Imprimir</span>
+                <i className="bi bi-save"></i>{' '}
+                <span className="mx-1">Guardar</span>
               </button>
             </div>
           )}

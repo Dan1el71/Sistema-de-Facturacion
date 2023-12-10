@@ -55,11 +55,11 @@ export type Invoice = {
 }
 
 export type InvoiceDetails = {
-  consecutive: number
+  clientId: number
   products: {
     productId: number
     quantity: number
-    unit_price: number
+    unitPrice: number
   }[]
 }
 
