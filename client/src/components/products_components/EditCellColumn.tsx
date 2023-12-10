@@ -42,14 +42,14 @@ const EditCell = ({ row, table }: EditCellProps) => {
       ) : (
         <div className="flex gap-5 ">
           <button
-            className="bg-red-400 rounded-full px-1"
+            className="bg-green-400 rounded-full px-1"
             onClick={setEditedRows}
             name="edit"
           >
             <i className="bi bi-pencil"></i>
           </button>
           <button
-            className="bg-green-400 rounded-full px-1"
+            className="bg-red-400 rounded-full px-1"
             onClick={removeRow}
             name="remove"
           >
