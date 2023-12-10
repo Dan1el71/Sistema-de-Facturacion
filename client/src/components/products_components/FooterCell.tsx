@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { FooterCellProps } from '../../types/types'
 import ProductError from './ProductError'
 
@@ -24,6 +24,12 @@ export const FooterCell = ({ table }: FooterCellProps) => {
     }
   }
 
+  const totalRows = table.getRowModel().rows
+
+  const total = useMemo(() => {
+    return totalRows.reduce((acc, row) => acc + (row.original.total || 0), 0)
+  }, [totalRows])
+
   return (
     <div className="flex justify-between mx-4 mb-4 font-normal">
       <div>
@@ -41,7 +47,7 @@ export const FooterCell = ({ table }: FooterCellProps) => {
         >
           <i className="bi bi-plus-circle"></i>
         </button>{' '}
-        <span>{table.getRowModel().rows.length} productos</span>
+        <span>{totalRows.length} productos</span>
         <div>
           {meta?.error &&
             (parseInt(id) > 0 ? (
@@ -51,8 +57,9 @@ export const FooterCell = ({ table }: FooterCellProps) => {
             ))}
         </div>
       </div>
-      {selectedRows.length > 0 && (
-        <div className="flex items-center mt-3">
+      <div className="flex items-center mt-3">
+        <span className="mx-4"> Total facturado: {total}</span>
+        {selectedRows.length > 0 && (
           <button
             title="Eliminar seleccionados"
             className="rounded-md py-1 px-4 hover:bg-red-700 bg-red-600"
@@ -60,8 +67,8 @@ export const FooterCell = ({ table }: FooterCellProps) => {
           >
             <i className="bi bi-trash"></i>
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
