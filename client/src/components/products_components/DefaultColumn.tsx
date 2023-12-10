@@ -10,15 +10,15 @@ const defaultColumn: Partial<ColumnDef<Invoice>> = {
 
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value)
-      table.options.meta?.setEditedRows((old) => ({
-        ...old,
-        [index]: false,
-      }))
     }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         onBlur()
+        table.options.meta?.setEditedRows((old) => ({
+          ...old,
+          [index]: false,
+        }))
       } else if (e.key === 'Escape') {
         setValue(initialValue)
         table.options.meta?.setEditedRows((old) => ({
