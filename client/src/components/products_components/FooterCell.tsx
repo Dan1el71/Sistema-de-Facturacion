@@ -28,7 +28,7 @@ export const FooterCell = ({ table }: FooterCellProps) => {
 
   const total = useMemo(() => {
     return totalRows.reduce((acc, row) => acc + (row.original.total || 0), 0)
-  }, [totalRows])
+  }, [totalRows]).toLocaleString()
 
   return (
     <div className="flex justify-between mx-4 mb-4 font-normal">
@@ -58,7 +58,10 @@ export const FooterCell = ({ table }: FooterCellProps) => {
         </div>
       </div>
       <div className="flex items-center mt-3">
-        <span className="mx-4"> Total facturado: {total}</span>
+        <span className="mx-4">
+          {' '}
+          <i className="pr-2 bi bi-cash"></i>Total facturado: ${total}
+        </span>
         {selectedRows.length > 0 && (
           <button
             title="Eliminar seleccionados"
