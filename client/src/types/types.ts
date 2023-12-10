@@ -54,6 +54,15 @@ export type Invoice = {
   total: number
 }
 
+export type InvoiceDetails = {
+  consecutive: number
+  products: {
+    productId: number
+    quantity: number
+    unit_price: number
+  }[]
+}
+
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     error: boolean
