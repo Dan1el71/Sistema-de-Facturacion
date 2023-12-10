@@ -39,7 +39,6 @@ const LoginPage = () => {
   }
 
   if (token) {
-    console.log("Already loged in")
     return <Navigate to="/" />
   }
 
