@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { getClientById, getIdTypes } from '../../api/client'
-import { Client, Identification } from '../../types/types'
+import { ClientSearchProps, Identification } from '../../types/types'
 import Error from '../Error'
 import { AxiosError } from 'axios'
 
-interface Props {
-  title: string
-  setIdData: React.Dispatch<React.SetStateAction<Client[]>>
-}
-
-const ClientSearch = ({ title, setIdData }: Props) => {
+const ClientSearch = ({
+  title,
+  setIdData,
+  setTableData,
+}: ClientSearchProps) => {
   const [id, setId] = useState<string | null>(null)
   const [idType, setIdType] = useState<number | null>(null)
   const [error, setError] = useState(false)
@@ -34,6 +33,7 @@ const ClientSearch = ({ title, setIdData }: Props) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIdData([])
+    setTableData([])
 
     if (idType !== null && id !== null) {
       try {
@@ -50,7 +50,7 @@ const ClientSearch = ({ title, setIdData }: Props) => {
           register_date: formattedDate,
           identification_type: getIdentificationAbbr(idType),
         }
-        console.log(formattedData)
+
         setIdData([formattedData])
       } catch (err) {
         if (err instanceof AxiosError) {

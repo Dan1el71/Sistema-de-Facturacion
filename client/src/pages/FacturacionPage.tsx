@@ -13,7 +13,11 @@ const FacturacionPage = () => {
         <h1 className="text-xl font-semibold p-4">Facturacion</h1>
       </div>
       <div>
-        <ClientSearch title="Seleccione un cliente" setIdData={setIdData} />
+        <ClientSearch
+          title="Seleccione un cliente"
+          setIdData={setIdData}
+          setTableData={setTableData}
+        />
       </div>
       {idData.length > 0 && (
         <div className="mx-12">
