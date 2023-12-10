@@ -14,6 +14,12 @@ export const loginHandler = async (
     where: {
       user,
     },
+    select: {
+      id_user: true,
+      name: true,
+      id_profile: true,
+      password: true,
+    },
   })
 
   if (!userFound) {
@@ -23,7 +29,7 @@ export const loginHandler = async (
     })
   }
 
-  const { id_user, name, middle_name, id_profile } = userFound
+  const { id_user, name, id_profile } = userFound
 
   const validPassword = await prisma.user.validPassword(
     password,
@@ -36,20 +42,13 @@ export const loginHandler = async (
     })
   }
 
-  const token = jwt.sign({ _id: id_user, role: id_profile }, JWT_SECRET, {
+  const token = jwt.sign({ _id: id_user, name, role: id_profile }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   })
 
   return res.status(200).json({
     status: 'success',
     token,
-    user: {
-      id_user,
-      name,
-      middle_name,
-      user,
-      id_profile,
-    },
   })
 }
 

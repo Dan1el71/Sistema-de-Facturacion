@@ -8,6 +8,7 @@ import idTypeRoutes from './routes/idtypes.routes'
 import clientRoutes from './routes/client.routes'
 import productRoutes from './routes/product.routes'
 import invoiceRoutes from './routes/invoice.routes'
+import userRoutes from './routes/user.routes'
 
 const app = express()
 
@@ -23,5 +24,6 @@ app.use('/api/idtypes', idTypeRoutes)
 app.use('/api/client', clientRoutes)
 app.use('/api/product', productRoutes)
 app.use('/api/invoice', invoiceRoutes)
+app.use('/api/user', userRoutes)
 
 export default app

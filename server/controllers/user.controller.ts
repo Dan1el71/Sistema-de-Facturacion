@@ -1,8 +1,11 @@
-import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
-import { deleteUserSchemaType, getUserSchemaType, newUserSchemaType, updateUserSchemaType } from '../schemas/auth.schema'
+import {
+  deleteUserSchemaType,
+  getUserSchemaType,
+  newUserSchemaType,
+  updateUserSchemaType,
+} from '../schemas/auth.schema'
 import prisma from '../db'
-import { JWT_EXPIRES_IN, JWT_SECRET } from '../config'
 
 export const newUser = async (
   req: Request<any, any, newUserSchemaType>,
@@ -34,13 +37,8 @@ export const newUser = async (
   if (newUser) {
     const { id_user, name, middle_name, user, id_profile } = newUser
 
-    const token = jwt.sign({ _id: id_user, role: id_profile }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-    })
-
     return res.status(201).json({
       status: 'success',
-      token,
       user: {
         id_user,
         name,
@@ -116,7 +114,6 @@ export const getUser = async (
     })
   }
 }
-
 
 export const updateUser = async (
   req: Request<updateUserSchemaType>,
