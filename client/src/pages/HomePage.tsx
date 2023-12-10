@@ -15,7 +15,7 @@ const HomePage = () => {
 
       <footer className="text-center">
         <p>
-          Tu rol es <strong>{rol}</strong>
+          Tu rol es <strong>{rol == 1 ? 'Administrador' : 'Cajero'}</strong>
         </p>
       </footer>
     </div>
