@@ -17,6 +17,7 @@ const ClientSearch = ({
   >([])
 
   const handleIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIdData([])
     const inputValue = e.currentTarget.value
     if (/^\d*$/.test(inputValue)) {
       setId(inputValue)
@@ -88,9 +89,10 @@ const ClientSearch = ({
           name="idType"
           required
           className="bg-[#161b22] p-1 ml-1  rounded-md mr-6 mt-6 mb-2 border border-gray-600"
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setIdData([])
             setIdType(Number(e.target.value))
-          }
+          }}
         >
           <option value="" label="" />
           {identificationTypes.map((id: Identification) => (

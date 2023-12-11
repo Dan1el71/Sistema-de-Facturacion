@@ -61,6 +61,13 @@ export type InvoiceDetails = {
   }[]
 }
 
+export type newClientType = {
+  identification_type: number
+  identification: string
+  social_reason: string
+  state: string
+}
+
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     error: boolean
