@@ -27,7 +27,7 @@ export const requireAuth = (
         message: 'Unauthorized',
       })
 
-    req.user = user
+    req.user = user as Express.Request['user']
     next()
   })
 }
