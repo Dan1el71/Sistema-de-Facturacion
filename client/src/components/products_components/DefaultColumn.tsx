@@ -35,6 +35,7 @@ const defaultColumn: Partial<ColumnDef<Invoice>> = {
     if (columnDef.meta?.editable && table.options.meta?.editedRows[index]) {
       return (
         <input
+          id={index.toString()}
           className="text-center w-20 bg-[white] text-black font-medium rounded-md border border-gray-800"
           value={value as string}
           onChange={(e) => {

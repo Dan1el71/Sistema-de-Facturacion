@@ -101,6 +101,15 @@ const ProductTable = ({ tableData, setTableData }: ProductTableProps) => {
             await getProductById(id)
           ).data.productFound
 
+          const isProductAlreadyAdded = Object.values(tableData).some(
+            (row) => row.id_product === productInfo.id
+          )
+
+          if (isProductAlreadyAdded) {
+            setError(true)
+            return
+          }
+
           const newRow: Invoice = {
             id_product: productInfo.id,
             name: productInfo.name,

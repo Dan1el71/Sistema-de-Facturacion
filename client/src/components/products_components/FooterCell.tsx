@@ -34,6 +34,7 @@ export const FooterCell = ({ table }: FooterCellProps) => {
     <div className="flex justify-between mx-4 mb-4 font-normal">
       <div>
         <input
+          id="Add product input"
           className="p-1 ml-1 mt-6 mb-2 rounded-md text-center border bg-[#161b22] border-gray-600"
           value={id}
           onChange={handleInputChange}
