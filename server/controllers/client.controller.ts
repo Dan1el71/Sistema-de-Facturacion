@@ -2,51 +2,47 @@ import { Request, Response } from 'express'
 import {
   deleteClientSchemaType,
   getClientByIdSchemaType,
-  getClientSchemaType,
-  newClientSchemaType,
+  createClientSchemaType,
   updateClientSchemaType,
 } from '../schemas/client.schema'
 import prisma from '../db'
+import { handleError } from '../middlewares/errorHandler'
 
-export const getClient = async (
-  req: Request<getClientSchemaType>,
-  res: Response
-) => {
+export const getAllClients = async (req: Request, res: Response) => {
+  try {
+    const clients = await prisma.client.findMany()
+
+    return res.status(200).json({
+      clients,
+    })
+  } catch (err) {
+    handleError(res, err)
+  }
+}
+
+export const getClient = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
 
-    if (id) {
-      const client = parseInt(id)
-      if (!isNaN(client)) {
-        const clientFound = await prisma.client.findFirst({
-          where: {
-            client,
-          },
-        })
-        if (clientFound) {
-          return res.status(200).json({
-            status: 'success',
-            clientFound,
-          })
-        }
-        return res.status(400).json({
-          status: 'failed',
-          message: 'Client not found',
+    const client = parseInt(id)
+    if (!isNaN(client)) {
+      const clientFound = await prisma.client.findFirst({
+        where: {
+          client,
+        },
+      })
+      if (clientFound) {
+        return res.status(200).json({
+          client: clientFound,
         })
       }
     }
 
-    const clients = await prisma.client.findMany()
-
-    return res.status(200).json({
-      status: 'success',
-      clients,
+    return res.status(400).json({
+      message: 'Client not found',
     })
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
@@ -58,48 +54,38 @@ export const getClientById = async (
     const identification = req.params.id
     const identification_type = parseInt(req.params.idType)
 
-    const clientFound = await prisma.client.findFirst({
+    const client = await prisma.client.findFirst({
       where: {
         identification_type,
         identification,
       },
     })
-    if (clientFound) {
+    if (client) {
       return res.status(200).json({
-        status: 'success',
-        clientFound,
+        client,
       })
     }
 
     return res.status(400).json({
-      status: 'failed',
       message: 'Client not found',
     })
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
-export const newClient = async (
-  req: Request<any, any, newClientSchemaType>,
+export const createClient = async (
+  req: Request<any, any, createClientSchemaType>,
   res: Response
 ) => {
   try {
     const { identification, identification_type, social_reason, state } =
       req.body
 
-    const clientFound = await prisma.client.findFirst({
-      where: {
-        identification,
-      },
-    })
+    const client = await clientExists(identification)
 
-    if (clientFound) {
+    if (client) {
       return res.status(400).json({
-        status: 'failed',
         message: 'Client already exists',
       })
     }
@@ -113,20 +99,15 @@ export const newClient = async (
 
     if (newClient) {
       return res.status(200).json({
-        status: 'success',
-        newClient,
+        client: newClient,
       })
     }
 
     return res.status(400).json({
-      status: 'failed',
       message: 'Client not created',
     })
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
@@ -139,14 +120,8 @@ export const updateClient = async (
       req.body
 
     const client = parseInt(req.params.id)
-    const idType = parseInt(req.params.idType)
 
-    const validClient = await prisma.client.findFirst({
-      where: {
-        identification_type: idType,
-        client,
-      },
-    })
+    const validClient = await clientExists(undefined, client)
 
     if (validClient) {
       const updatedClient = await prisma.client.update({
@@ -163,14 +138,12 @@ export const updateClient = async (
 
       if (updatedClient) {
         return res.status(200).json({
-          status: 'success',
-          updatedClient,
+          client: updatedClient,
         })
       }
     }
 
     return res.status(400).json({
-      status: 'failed',
       message: 'Client not found',
     })
   } catch (err) {
@@ -219,4 +192,19 @@ export const deleteClient = async (
       message: 'Internal server error',
     })
   }
+}
+
+const clientExists = async (identification?: string, client?: number) => {
+  const clientFound = await prisma.client.findFirst({
+    where: {
+      client,
+      identification,
+    },
+  })
+
+  if (clientFound) {
+    return true
+  }
+
+  return false
 }

@@ -24,7 +24,6 @@ export const loginHandler = async (
 
   if (!userFound) {
     return res.status(400).json({
-      status: 'failed',
       message: 'Authentication failed',
     })
   }
@@ -37,7 +36,6 @@ export const loginHandler = async (
   )
   if (!validPassword) {
     return res.status(400).json({
-      status: 'failed',
       message: 'Authentication failed',
     })
   }
@@ -47,14 +45,12 @@ export const loginHandler = async (
   })
 
   return res.status(200).json({
-    status: 'success',
     token,
   })
 }
 
-export const getUserProfile = async (req: Request, res: Response) => {
+export const profileHandler = async (req: Request, res: Response) => {
   return res.status(200).json({
-    status: 'success',
-    userProfile: req.user,
+    profile: req.user,
   })
 }

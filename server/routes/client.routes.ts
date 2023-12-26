@@ -4,50 +4,38 @@ import { validateSchema } from '../middlewares/validateSchema'
 import {
   deleteClientSchema,
   getClientByIdSchema,
-  getClientSchema,
-  newClientSchema,
+  createClientSchema,
   updateClientSchema,
 } from '../schemas/client.schema'
 import {
   deleteClient,
+  getAllClients,
   getClient,
   getClientById,
-  newClient,
+  createClient,
   updateClient,
 } from '../controllers/client.controller'
 
 const route = Router()
 
 //Get
-route.get('/getClient', requireAuth, validateSchema(getClientSchema), getClient)
+route.get('/', requireAuth, getAllClients)
+route.get('/:id', requireAuth, getClient)
+
 route.get(
-  '/getClient/:id',
-  requireAuth,
-  validateSchema(getClientSchema),
-  getClient
-)
-route.get(
-  '/getClientById/:idType/:id',
+  '/:idType/:id',
   requireAuth,
   validateSchema(getClientByIdSchema),
   getClientById
 )
 
 //Post
-route.post(
-  '/newClient',
-  requireAuth,
-  validateSchema(newClientSchema),
-  newClient
-)
+route.post('/', requireAuth, validateSchema(createClientSchema), createClient)
 
-route.put(
-  '/updateClient/:idType/:id',
-  requireAuth,
-  validateSchema(updateClientSchema),
-  updateClient
-)
+//Put
+route.put('/:id', requireAuth, validateSchema(updateClientSchema), updateClient)
 
+//Delete
 route.delete(
   '/deleteClient/:idType/:id',
   requireAuth,

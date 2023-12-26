@@ -1,15 +1,24 @@
 import { z } from 'zod'
 
-export const getClientSchema = z.object({
+export const getClientByIdSchema = z.object({
   params: z
     .object({
-      id: z.string({ required_error: 'Id is required' }).optional(),
+      id: z
+        .string({ required_error: 'Client id is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Client id must be a number',
+        }),
+      idType: z
+        .string({ required_error: 'Identification type is required' })
+        .refine((val) => !isNaN(parseInt(val)), {
+          message: 'Identification type must be a number',
+        }),
     })
     .strict(),
   body: z.object({}).strict(),
 })
 
-export const newClientSchema = z.object({
+export const createClientSchema = z.object({
   body: z
     .object({
       identification_type: z.number({
@@ -33,32 +42,9 @@ export const newClientSchema = z.object({
     .strict(),
 })
 
-export const getClientByIdSchema = z.object({
-  params: z
-    .object({
-      id: z
-        .string({ required_error: 'Id is required' })
-        .refine((val) => !isNaN(parseInt(val)), {
-          message: 'Id must be a number',
-        }),
-      idType: z
-        .string({ required_error: 'Id type is required' })
-        .refine((val) => !isNaN(parseInt(val)), {
-          message: 'Id must be a number',
-        }),
-    })
-    .strict(),
-  body: z.object({}).strict(),
-})
-
 export const updateClientSchema = z.object({
   params: z
     .object({
-      idType: z
-        .string({ required_error: 'Identification type is required' })
-        .refine((val) => !isNaN(parseInt(val)), {
-          message: 'Identification type must be a number',
-        }),
       id: z
         .string({ required_error: 'Id is required' })
         .refine((val) => !isNaN(parseInt(val)), {
@@ -107,14 +93,13 @@ export const deleteClientSchema = z.object({
   body: z.object({}).strict(),
 })
 
+export type getClientByIdSchemaType = z.infer<
+  typeof getClientByIdSchema
+>['params']
+export type createClientSchemaType = z.infer<typeof createClientSchema>['body']
 export type deleteClientSchemaType = z.infer<
   typeof deleteClientSchema
 >['params']
 export type updateClientSchemaType = z.infer<
   typeof updateClientSchema
 >['params']
-export type getClientByIdSchemaType = z.infer<
-  typeof getClientByIdSchema
->['params']
-export type getClientSchemaType = z.infer<typeof getClientSchema>['params']
-export type newClientSchemaType = z.infer<typeof newClientSchema>['body']
