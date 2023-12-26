@@ -78,11 +78,6 @@ export const updateClientSchema = z.object({
 export const deleteClientSchema = z.object({
   params: z
     .object({
-      idType: z
-        .string({ required_error: 'Identification type is required' })
-        .refine((val) => !isNaN(parseInt(val)), {
-          message: 'Identification type must be a number',
-        }),
       id: z
         .string({ required_error: 'Id is required' })
         .refine((val) => !isNaN(parseInt(val)), {

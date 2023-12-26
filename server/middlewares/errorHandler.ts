@@ -6,3 +6,9 @@ export const handleError = (res: Response, err: unknown) => {
     message: 'Internal server error',
   })
 }
+
+export const clientNotFound = (res: Response) => {
+  res.status(404).json({
+    message: 'Client not found',
+  })
+}

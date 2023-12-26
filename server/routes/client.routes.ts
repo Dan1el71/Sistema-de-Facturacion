@@ -37,7 +37,7 @@ route.put('/:id', requireAuth, validateSchema(updateClientSchema), updateClient)
 
 //Delete
 route.delete(
-  '/deleteClient/:idType/:id',
+  '/:id',
   requireAuth,
   validateSchema(deleteClientSchema),
   deleteClient

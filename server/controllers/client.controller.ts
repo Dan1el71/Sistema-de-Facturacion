@@ -6,7 +6,7 @@ import {
   updateClientSchemaType,
 } from '../schemas/client.schema'
 import prisma from '../db'
-import { handleError } from '../middlewares/errorHandler'
+import { clientNotFound, handleError } from '../middlewares/errorHandler'
 
 export const getAllClients = async (req: Request, res: Response) => {
   try {
@@ -38,9 +38,7 @@ export const getClient = async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(400).json({
-      message: 'Client not found',
-    })
+    return clientNotFound(res)
   } catch (err) {
     handleError(res, err)
   }
@@ -66,9 +64,7 @@ export const getClientById = async (
       })
     }
 
-    return res.status(400).json({
-      message: 'Client not found',
-    })
+    return clientNotFound(res)
   } catch (err) {
     handleError(res, err)
   }
@@ -121,36 +117,35 @@ export const updateClient = async (
 
     const client = parseInt(req.params.id)
 
-    const validClient = await clientExists(undefined, client)
+    const identificationExists = await clientExists(identification)
 
-    if (validClient) {
-      const updatedClient = await prisma.client.update({
-        where: {
-          client,
-        },
-        data: {
-          identification_type,
-          identification,
-          social_reason,
-          state,
-        },
+    if (identificationExists && identificationExists.client !== client) {
+      return res.status(400).json({
+        message: 'Client already exists',
       })
-
-      if (updatedClient) {
-        return res.status(200).json({
-          client: updatedClient,
-        })
-      }
     }
 
-    return res.status(400).json({
-      message: 'Client not found',
+    const updatedClient = await prisma.client.update({
+      where: {
+        client,
+      },
+      data: {
+        identification_type,
+        identification,
+        social_reason,
+        state,
+      },
     })
+
+    if (updatedClient) {
+      return res.status(200).json({
+        client: updatedClient,
+      })
+    }
+
+    return clientNotFound(res)
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    return handleError(res, err)
   }
 }
 
@@ -160,14 +155,9 @@ export const deleteClient = async (
 ) => {
   try {
     const client = parseInt(req.params.id)
-    const identification_type = parseInt(req.params.idType)
 
-    const validClient = await prisma.client.findFirst({
-      where: {
-        identification_type,
-        client,
-      },
-    })
+    const validClient = await clientExists(undefined, client)
+
     if (validClient) {
       const deletedClient = await prisma.client.delete({
         where: {
@@ -175,22 +165,13 @@ export const deleteClient = async (
         },
       })
 
-      if (deletedClient) {
-        return res.status(200).json({
-          status: 'success',
-          deletedClient,
-        })
-      }
+      return res.status(200).json({
+        client: deletedClient,
+      })
     }
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Client not found',
-    })
+    return clientNotFound(res)
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    return handleError(res, err)
   }
 }
 
@@ -201,9 +182,8 @@ const clientExists = async (identification?: string, client?: number) => {
       identification,
     },
   })
-
   if (clientFound) {
-    return true
+    return clientFound
   }
 
   return false
