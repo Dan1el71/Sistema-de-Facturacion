@@ -4,43 +4,60 @@ import {
   NewIdTypeSchemaType,
 } from '../schemas/idtype.schema'
 import prisma from '../db'
+import { handleError } from '../middlewares/errorHandler'
 
-export const newIdType = async (
+export const createIdType = async (
   req: Request<any, any, NewIdTypeSchemaType>,
   res: Response
 ) => {
-  const { abreviature, description } = req.body
+  try {
+    const { abreviature, description } = req.body
 
+    if (await abreviatureExist(res, abreviature))
+      return res.status(400).json({
+        message: 'Identification type already exists',
+      })
+
+    const newIdType = await prisma.identification_Type.create({
+      data: {
+        abreviature,
+        description,
+      },
+    })
+
+    if (newIdType)
+      return res.status(201).json({
+        identification_type: newIdType,
+      })
+
+    return res.status(400).json({
+      message: 'Identification type not created',
+    })
+  } catch (err) {
+    return handleError(res, err)
+  }
+}
+
+const abreviatureExist = async (res: Response, abreviature: string) => {
   const idTypeExist = await prisma.identification_Type.findFirst({
     where: {
       abreviature,
     },
   })
 
-  if (idTypeExist) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Id type already exists',
+  return idTypeExist
+}
+
+export const getIdTypes = async (req: Request, res: Response) => {
+  try {
+    const idTypes = await prisma.identification_Type.findMany()
+
+    return res.status(200).json({
+      idTypes,
     })
+  } catch (err) {
+    return handleError(res, err)
   }
-
-  const newIdType = await prisma.identification_Type.create({
-    data: {
-      abreviature,
-      description,
-    },
-  })
-
-  if (newIdType)
-    return res.status(201).json({
-      status: 'success',
-      newIdType,
-    })
-
-  return res.status(400).json({
-    status: 'failed',
-    message: 'Failed to create new id type',
-  })
 }
 
 export const getIdType = async (
@@ -50,41 +67,24 @@ export const getIdType = async (
   try {
     const { id } = req.params
 
-    if (id) {
-      const identification_type = parseInt(id)
+    const identification_type = parseInt(id)
 
-      if (!isNaN(identification_type)) {
-        const idType = await prisma.identification_Type.findFirst({
-          where: {
-            identification_type,
-          },
-        })
+    const idType = await prisma.identification_Type.findFirst({
+      where: {
+        identification_type,
+      },
+    })
 
-        if (idType) {
-          return res.status(200).json({
-            status: 'success',
-            idType,
-          })
-        }
-      }
-
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Invalid idType id',
+    if (idType) {
+      return res.status(200).json({
+        identification_type: idType,
       })
     }
 
-    const idTypes = await prisma.identification_Type.findMany()
-
-    return res.status(200).json({
-      status: 'success',
-      idTypes,
+    return res.status(400).json({
+      message: 'Identification type not found',
     })
   } catch (err) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Invalid idType id',
-      error: err,
-    })
+    return handleError(res, err)
   }
 }

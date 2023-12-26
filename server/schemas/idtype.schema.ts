@@ -18,11 +18,10 @@ export const getIdTypeSchema = z.object({
       .string({ required_error: 'Id is required' })
       .refine((val) => !isNaN(parseInt(val)), {
         message: 'Id must be a number',
-      })
-      .optional(),
+      }),
   }),
   body: z.object({}).strict({ message: 'Invalid data' }),
 })
 
-export type GetIdTypeSchemaType = z.infer<typeof getIdTypeSchema>['params']
 export type NewIdTypeSchemaType = z.infer<typeof newIdTypeSchema>['body']
+export type GetIdTypeSchemaType = z.infer<typeof getIdTypeSchema>['params']
