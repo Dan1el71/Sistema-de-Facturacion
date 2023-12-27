@@ -5,8 +5,8 @@ import { getProfile, newProfile } from '../controllers/profile.controller'
 
 const route = Router()
 
-route.post('/newProfile', validateSchema(newProfileSchema), newProfile)
+route.post('/', validateSchema(newProfileSchema), newProfile)
 
-route.get('/getProfile/:id', validateSchema(getProfileSchema), getProfile)
+route.get('/:id', validateSchema(getProfileSchema), getProfile)
 
 export default route

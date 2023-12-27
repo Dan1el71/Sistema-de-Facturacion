@@ -1,93 +1,59 @@
-import { Request, Response } from 'express'
 import {
   deleteUserSchemaType,
   getUserSchemaType,
-  newUserSchemaType,
   updateUserSchemaType,
-} from '../schemas/auth.schema'
-import prisma from '../db'
+} from './../schemas/user.schema'
+import { Request, Response } from 'express'
 
-export const newUser = async (
+import prisma from '../db'
+import { newUserSchemaType } from '../schemas/user.schema'
+import {
+  alreadyExistsError,
+  handleError,
+  notFoundError,
+} from '../middlewares/errorHandler'
+
+export const createUser = async (
   req: Request<any, any, newUserSchemaType>,
   res: Response
 ) => {
-  const { name, middle_name, password, user, id_profile } = req.body
-
-  const userExist = await prisma.user.findFirst({
-    where: {
-      user,
-    },
-  })
-
-  if (userExist) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'User already exists',
-    })
-  }
-
-  const newUser = await prisma.user.createUser(
-    name,
-    user,
-    password,
-    id_profile,
-    middle_name ? middle_name : undefined
-  )
-
-  if (newUser) {
-    const { id_user, name, middle_name, user, id_profile } = newUser
-
-    return res.status(201).json({
-      status: 'success',
-      user: {
-        id_user,
-        name,
-        middle_name,
-        user,
-        id_profile,
-      },
-    })
-  }
-
-  return res.status(400).json({
-    status: 'failed',
-    message: 'Invalid profile id',
-  })
-}
-
-export const getUser = async (
-  req: Request<getUserSchemaType, any, any>,
-  res: Response
-) => {
   try {
-    const id = req.params.id
-    if (id) {
-      const id_user = parseInt(id)
+    const { name, middle_name, password, user, id_profile } = req.body
 
-      const userFound = await prisma.user.findFirst({
-        where: {
+    if (await findUser(undefined, user)) return alreadyExistsError(res, 'User')
+
+    const newUser = await prisma.user.createUser(
+      name,
+      user,
+      password,
+      id_profile,
+      middle_name ? middle_name : undefined
+    )
+
+    if (newUser) {
+      const { id_user, name, middle_name, user, id_profile } = newUser
+
+      return res.status(201).json({
+        user: {
           id_user,
+          name,
+          middle_name,
+          user,
+          id_profile,
         },
-        select: {
-          id_user: true,
-          name: true,
-          middle_name: true,
-          user: true,
-          id_profile: true,
-        },
-      })
-      if (userFound)
-        return res.status(200).json({
-          status: 'success',
-          userFound,
-        })
-
-      return res.status(400).json({
-        status: 'failed',
-        message: 'User not found',
       })
     }
 
+    return res.status(400).json({
+      message: 'Invalid profile id',
+    })
+  } catch (err) {
+    handleError(res, err)
+  }
+}
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
     const users = await prisma.user.findMany({
       select: {
         id_user: true,
@@ -98,20 +64,31 @@ export const getUser = async (
       },
     })
 
-    if (users)
+    return res.status(200).json({
+      users,
+    })
+  } catch (err) {
+    return handleError(res, err)
+  }
+}
+
+export const getUser = async (
+  req: Request<getUserSchemaType, any, any>,
+  res: Response
+) => {
+  try {
+    const id_user = parseInt(req.params.id)
+
+    const user = await findUser(id_user)
+
+    if (user)
       return res.status(200).json({
-        status: 'success',
-        users,
+        user,
       })
 
-    return res
-      .status(400)
-      .json({ status: 'failed', message: 'Users not found' })
+    return notFoundError(res, 'User')
   } catch (err) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Invalid user',
-    })
+    return handleError(res, err)
   }
 }
 
@@ -123,31 +100,12 @@ export const updateUser = async (
     const id_user = parseInt(req.params.id)
     const { name, middle_name, user, password, id_profile } = req.body
 
-    const userFound = await prisma.user.findFirst({
-      where: {
-        id_user,
-      },
-    })
+    if (!(await findUser(id_user))) return notFoundError(res, 'User')
 
-    if (!userFound) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'User not found',
-      })
-    }
+    const userExist = await findUser(undefined, user)
 
-    const userExist = await prisma.user.findFirst({
-      where: {
-        user,
-      },
-    })
-
-    if (userExist && userExist.id_user !== id_user) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'User already exists',
-      })
-    }
+    if (userExist && userExist.id_user !== id_user)
+      return alreadyExistsError(res, 'User')
 
     const updatedUser = await prisma.user.updateUser(
       id_user,
@@ -158,22 +116,17 @@ export const updateUser = async (
       middle_name ? middle_name : undefined
     )
 
-    if (updatedUser)
+    if (updatedUser) {
       return res.status(200).json({
-        status: 'success',
-        updatedUser,
+        user: updatedUser,
       })
+    }
 
     return res.status(400).json({
-      status: 'failed',
       message: 'Invalid profile id',
     })
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
@@ -184,18 +137,7 @@ export const deleteUser = async (
   try {
     const id_user = parseInt(req.params.id)
 
-    const userFound = await prisma.user.findFirst({
-      where: {
-        id_user,
-      },
-    })
-
-    if (!userFound) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'User not found',
-      })
-    }
+    if (!(await findUser(id_user))) return notFoundError(res, 'User')
 
     const deletedUser = await prisma.user.delete({
       where: {
@@ -205,18 +147,31 @@ export const deleteUser = async (
 
     if (deletedUser)
       return res.status(200).json({
-        status: 'success',
-        deletedUser,
+        user: deletedUser,
       })
 
     return res.status(400).json({
-      status: 'failed',
       message: 'User delete failed',
     })
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
+}
+
+const findUser = async (id_user?: number, user?: string) => {
+  const userFound = await prisma.user.findFirst({
+    where: {
+      id_user,
+      user,
+    },
+    select: {
+      id_user: true,
+      name: true,
+      middle_name: true,
+      user: true,
+      id_profile: true,
+    },
+  })
+
+  return userFound
 }

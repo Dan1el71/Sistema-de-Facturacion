@@ -4,41 +4,35 @@ import {
   newProfileSchemaType,
 } from '../schemas/profile.schema'
 import prisma from '../db'
+import {
+  alreadyExistsError,
+  handleError,
+  notFoundError,
+} from '../middlewares/errorHandler'
 
 export const newProfile = async (
   req: Request<any, any, newProfileSchemaType>,
   res: Response
 ) => {
-  const name = req.body.name
+  try {
+    const name = req.body.name
 
-  const profileExist = await prisma.profile.findFirst({
-    where: {
-      name,
-    },
-  })
-  if (profileExist) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Profile already exists',
+    if (await profileExist(name)) return alreadyExistsError(res, 'Profile')
+
+    const newProfile = await prisma.profile.create({
+      data: {
+        name,
+      },
     })
+
+    if (newProfile)
+      return res.status(201).json({
+        profile: newProfile,
+      })
+    else throw new Error('Profile creation failed')
+  } catch (err) {
+    handleError(res, err)
   }
-
-  const newProfile = await prisma.profile.create({
-    data: {
-      name,
-    },
-  })
-
-  if (newProfile)
-    return res.status(201).json({
-      status: 'success',
-      newProfile,
-    })
-
-  return res.status(400).json({
-    status: 'failed',
-    message: 'Failed to create new profile',
-  })
 }
 
 export const getProfile = async (
@@ -56,18 +50,21 @@ export const getProfile = async (
 
     if (profile)
       return res.status(200).json({
-        status: 'success',
         profile,
       })
 
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Profile id not found',
-    })
-  } catch (error) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Invalid profile id',
-    })
+    return notFoundError(res, 'Profile')
+  } catch (err) {
+    handleError(res, err)
   }
+}
+
+const profileExist = async (name: string) => {
+  const profile = await prisma.profile.findFirst({
+    where: {
+      name,
+    },
+  })
+
+  return profile
 }

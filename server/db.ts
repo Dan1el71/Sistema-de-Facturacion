@@ -62,6 +62,13 @@ const prisma = new PrismaClient().$extends({
               password: hashedPassword,
               id_profile,
             },
+            select: {
+              id_user: true,
+              name: true,
+              middle_name: true,
+              user: true,
+              id_profile: true,
+            },
           })
         } else {
           return null

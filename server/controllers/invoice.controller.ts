@@ -17,7 +17,6 @@ export const newInvoice = async (
     })
     if (!validClient) {
       return res.status(400).json({
-        status: 'failed',
         message: 'Invalid client id',
       })
     }
@@ -42,7 +41,6 @@ export const newInvoice = async (
     })
 
     res.status(201).json({
-      status: 'success',
       message: 'Invoice created successfully',
     })
   } catch (err) {

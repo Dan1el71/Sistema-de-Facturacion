@@ -3,8 +3,9 @@ import { requireAuth } from '../middlewares/requireAuth'
 import {
   deleteUser,
   getUser,
-  newUser,
+  getAllUsers,
   updateUser,
+  createUser,
 } from '../controllers/user.controller'
 import { validateSchema } from '../middlewares/validateSchema'
 import {
@@ -12,24 +13,19 @@ import {
   getUserSchema,
   newUserSchema,
   updateUserSchema,
-} from '../schemas/auth.schema'
+} from '../schemas/user.schema'
 
 const route = Router()
 
-route.post('/newUser', validateSchema(newUserSchema), newUser)
+route.get('/', requireAuth, getAllUsers)
+route.get('/:id', requireAuth, validateSchema(getUserSchema), getUser)
 
-route.get('/getUser', requireAuth, getUser)
-route.get('/getUser/:id', requireAuth, validateSchema(getUserSchema), getUser)
+route.post('/', validateSchema(newUserSchema), createUser)
 
-route.put(
-  '/updateUser/:id',
-  requireAuth,
-  validateSchema(updateUserSchema),
-  updateUser
-)
+route.put('/:id', requireAuth, validateSchema(updateUserSchema), updateUser)
 
 route.delete(
-  '/deleteUser/:id',
+  '/:id',
   requireAuth,
   validateSchema(deleteUserSchema),
   deleteUser
