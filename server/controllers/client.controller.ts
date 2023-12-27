@@ -6,7 +6,11 @@ import {
   updateClientSchemaType,
 } from '../schemas/client.schema'
 import prisma from '../db'
-import { clientNotFound, handleError } from '../middlewares/errorHandler'
+import {
+  notFoundError,
+  handleError,
+  alreadyExistsError,
+} from '../middlewares/errorHandler'
 
 export const getAllClients = async (req: Request, res: Response) => {
   try {
@@ -38,7 +42,7 @@ export const getClient = async (req: Request, res: Response) => {
       }
     }
 
-    return clientNotFound(res)
+    return notFoundError(res, 'Client')
   } catch (err) {
     handleError(res, err)
   }
@@ -64,7 +68,7 @@ export const getClientById = async (
       })
     }
 
-    return clientNotFound(res)
+    return notFoundError(res, 'Client')
   } catch (err) {
     handleError(res, err)
   }
@@ -80,11 +84,7 @@ export const createClient = async (
 
     const client = await clientExists(identification)
 
-    if (client) {
-      return res.status(400).json({
-        message: 'Client already exists',
-      })
-    }
+    if (client) return alreadyExistsError(res, 'Client')
 
     const newClient = await prisma.client.createClient(
       identification_type,
@@ -94,7 +94,7 @@ export const createClient = async (
     )
 
     if (newClient) {
-      return res.status(200).json({
+      return res.status(201).json({
         client: newClient,
       })
     }
@@ -120,9 +120,7 @@ export const updateClient = async (
     const identificationExists = await clientExists(identification)
 
     if (identificationExists && identificationExists.client !== client) {
-      return res.status(400).json({
-        message: 'Client already exists',
-      })
+      return alreadyExistsError(res, 'Client')
     }
 
     const updatedClient = await prisma.client.update({
@@ -143,7 +141,7 @@ export const updateClient = async (
       })
     }
 
-    return clientNotFound(res)
+    return notFoundError(res, 'Client')
   } catch (err) {
     return handleError(res, err)
   }
@@ -169,7 +167,7 @@ export const deleteClient = async (
         client: deletedClient,
       })
     }
-    return clientNotFound(res)
+    return notFoundError(res, 'Client')
   } catch (err) {
     return handleError(res, err)
   }

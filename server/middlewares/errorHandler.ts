@@ -7,8 +7,14 @@ export const handleError = (res: Response, err: unknown) => {
   })
 }
 
-export const clientNotFound = (res: Response) => {
+export const notFoundError = (res: Response, message: string) => {
   res.status(404).json({
-    message: 'Client not found',
+    message: `${message} not found`,
+  })
+}
+
+export const alreadyExistsError = (res: Response, message: string) => {
+  res.status(400).json({
+    message: `${message} already exists`,
   })
 }

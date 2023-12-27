@@ -6,6 +6,11 @@ import {
   updateProductSchemaType,
 } from '../schemas/product.schema'
 import prisma from '../db'
+import {
+  alreadyExistsError,
+  handleError,
+  notFoundError,
+} from '../middlewares/errorHandler'
 
 export const createProduct = async (
   req: Request<any, any, createProductSchemaType>,
@@ -14,18 +19,8 @@ export const createProduct = async (
   try {
     const { name, state, unit_price } = req.body
 
-    const productExist = await prisma.product.findFirst({
-      where: {
-        name,
-      },
-    })
-
-    if (productExist) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Product already exists',
-      })
-    }
+    if (await findProduct(undefined, name))
+      return alreadyExistsError(res, 'Product')
 
     const newProduct = await prisma.product.create({
       data: {
@@ -37,18 +32,29 @@ export const createProduct = async (
 
     if (newProduct) {
       return res.status(201).json({
-        status: 'success',
-        message: 'Product created successfully',
-        newProduct,
+        product: newProduct,
       })
     } else {
       throw new Error('Product creation failed')
     }
   } catch (error) {
-    return res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    return handleError(res, error)
+  }
+}
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await prisma.product.findMany()
+
+    if (products) {
+      return res.status(200).json({
+        products,
+      })
+    } else {
+      throw new Error('Product retrieval failed')
+    }
+  } catch (err) {
+    handleError(res, err)
   }
 }
 
@@ -57,41 +63,23 @@ export const getProduct = async (
   res: Response
 ) => {
   try {
-    const _id = req.params.id
+    const id = parseInt(req.params.id)
 
-    if (_id) {
-      const id = parseInt(_id)
-      const productFound = await prisma.product.findFirst({
-        where: {
-          id,
-        },
-      })
+    const product = await prisma.product.findFirst({
+      where: {
+        id,
+      },
+    })
 
-      if (productFound) {
-        return res.status(200).json({
-          status: 'success',
-          productFound,
-        })
-      }
-
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Product not found',
+    if (product) {
+      return res.status(200).json({
+        product,
       })
     }
 
-    const products = await prisma.product.findMany()
-
-    return res.status(200).json({
-      status: 'success',
-      products,
-    })
+    return notFoundError(res, 'Product')
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
@@ -103,30 +91,13 @@ export const updateProduct = async (
     const id = parseInt(req.params.id)
     const { name, state, unit_price } = req.body
 
-    const productFound = await prisma.product.findFirst({
-      where: {
-        id,
-      },
-    })
+    if (!(await findProduct(id, undefined)))
+      return notFoundError(res, 'Product')
 
-    if (!productFound) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Product not found',
-      })
-    }
-
-    const productExists = await prisma.product.findFirst({
-      where: {
-        name,
-      },
-    })
+    const productExists = await findProduct(undefined, name)
 
     if (productExists && productExists.id !== id) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Product already exists',
-      })
+      return alreadyExistsError(res, 'Product')
     }
 
     const updatedProduct = await prisma.product.update({
@@ -142,17 +113,13 @@ export const updateProduct = async (
 
     if (updatedProduct) {
       return res.status(200).json({
-        status: 'success',
-        updatedProduct,
+        product: updatedProduct,
       })
     } else {
       throw new Error('Product update failed')
     }
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }
 
@@ -163,18 +130,8 @@ export const deleteProduct = async (
   try {
     const id = parseInt(req.params.id)
 
-    const productFound = await prisma.product.findFirst({
-      where: {
-        id,
-      },
-    })
-
-    if (!productFound) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Product not found',
-      })
-    }
+    if (!(await findProduct(id, undefined)))
+      return notFoundError(res, 'Product')
 
     const deletedProduct = await prisma.product.delete({
       where: {
@@ -184,16 +141,23 @@ export const deleteProduct = async (
 
     if (deletedProduct) {
       return res.status(200).json({
-        status: 'success',
         deletedProduct,
       })
     } else {
       throw new Error('Product deletion failed')
     }
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    return handleError(res, err)
   }
+}
+
+const findProduct = async (id?: number, name?: string) => {
+  const product = await prisma.product.findFirst({
+    where: {
+      id,
+      name,
+    },
+  })
+
+  return product
 }

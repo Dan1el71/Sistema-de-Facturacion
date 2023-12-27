@@ -4,7 +4,11 @@ import {
   NewIdTypeSchemaType,
 } from '../schemas/idtype.schema'
 import prisma from '../db'
-import { handleError } from '../middlewares/errorHandler'
+import {
+  alreadyExistsError,
+  handleError,
+  notFoundError,
+} from '../middlewares/errorHandler'
 
 export const createIdType = async (
   req: Request<any, any, NewIdTypeSchemaType>,
@@ -14,9 +18,7 @@ export const createIdType = async (
     const { abreviature, description } = req.body
 
     if (await abreviatureExist(res, abreviature))
-      return res.status(400).json({
-        message: 'Identification type already exists',
-      })
+      return alreadyExistsError(res, 'Identification type')
 
     const newIdType = await prisma.identification_Type.create({
       data: {
@@ -81,9 +83,7 @@ export const getIdType = async (
       })
     }
 
-    return res.status(400).json({
-      message: 'Identification type not found',
-    })
+    return notFoundError(res, 'Identification type')
   } catch (err) {
     return handleError(res, err)
   }

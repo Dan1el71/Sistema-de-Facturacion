@@ -7,8 +7,7 @@ export const getProductSchema = z.object({
         .string({ required_error: 'Product id is required' })
         .refine((val) => !isNaN(parseInt(val)), {
           message: 'Id must be a number',
-        })
-        .optional(),
+        }),
     })
     .strict(),
   body: z.object({}).strict(),

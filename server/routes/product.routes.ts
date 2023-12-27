@@ -11,33 +11,25 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
+  getAllProducts,
   updateProduct,
 } from '../controllers/product.controller'
 
 const route = Router()
 
+route.get('/', requireAuth, getAllProducts)
+
+route.get('/:id', requireAuth, validateSchema(getProductSchema), getProduct)
+
 route.post(
-  '/newProduct',
+  '/',
   requireAuth,
   validateSchema(createProductSchema),
   createProduct
 )
 
-route.get(
-  '/getProduct',
-  requireAuth,
-  validateSchema(getProductSchema),
-  getProduct
-)
-route.get(
-  '/getProduct/:id',
-  requireAuth,
-  validateSchema(getProductSchema),
-  getProduct
-)
-
 route.put(
-  '/updateProduct/:id',
+  '/:id',
   requireAuth,
   validateSchema(updateProductSchema),
   updateProduct

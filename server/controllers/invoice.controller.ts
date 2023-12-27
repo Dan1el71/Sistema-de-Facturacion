@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { NewInvoiceSchemaType } from '../schemas/invoice.schema'
 import prisma from '../db'
+import { handleError } from '../middlewares/errorHandler'
 
 export const newInvoice = async (
   req: Request<any, any, NewInvoiceSchemaType>,
@@ -45,9 +46,6 @@ export const newInvoice = async (
       message: 'Invoice created successfully',
     })
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
+    handleError(res, err)
   }
 }

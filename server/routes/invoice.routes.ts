@@ -6,11 +6,6 @@ import { newInvoice } from '../controllers/invoice.controller'
 
 const route = Router()
 
-route.post(
-  '/newInvoice',
-  requireAuth,
-  validateSchema(newInvoiceSchema),
-  newInvoice
-)
+route.post('/', requireAuth, validateSchema(newInvoiceSchema), newInvoice)
 
 export default route
