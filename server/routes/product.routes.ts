@@ -36,7 +36,7 @@ route.put(
 )
 
 route.delete(
-  '/deleteProduct/:id',
+  '/:id',
   requireAuth,
   validateSchema(deleteProductSchema),
   deleteProduct
