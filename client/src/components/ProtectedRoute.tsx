@@ -23,7 +23,7 @@ export const ProtectedRoute = ({
     const loadProfile = async () => {
       try {
         const { data } = await getUserProfile()
-        setUserProfile(data.userProfile)
+        setUserProfile(data.profile)
       } catch (err) {
         navigate('/login')
       }

@@ -2,7 +2,7 @@ import axios, { AxiosRequestHeaders } from 'axios'
 import { useAuthStore } from '../store/auth'
 
 const authApi = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 })
 

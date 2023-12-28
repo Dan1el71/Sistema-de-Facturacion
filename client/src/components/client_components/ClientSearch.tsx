@@ -45,11 +45,11 @@ const ClientSearch = ({
         setError(false)
 
         const formattedDate = new Date(
-          responseData.clientFound.register_date
+          responseData.client.register_date
         ).toLocaleDateString('es-ES')
 
         const formattedData = {
-          ...responseData.clientFound,
+          ...responseData.client,
           register_date: formattedDate,
           identification_type: getIdentificationAbbr(idType),
         }

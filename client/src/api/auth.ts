@@ -8,5 +8,5 @@ export const login = async (user: string, password: string) => {
 }
 
 export const getUserProfile = async () => {
-  return axios.get('/auth/getUserProfile')
+  return axios.get('/auth/profile')
 }
