@@ -12,11 +12,8 @@ const UpdateClient = () => {
           <i className="pr-2 bi bi-person-plus" />
           Modificar cliente
         </h2>
+        <ClientSearch setIdData={setIdData} />
       </div>
-      <ClientSearch
-        title="Digite el cliente a modificar"
-        setIdData={setIdData}
-      />
 
       {Object.keys(idData).length > 0 && <div className=""></div>}
     </>

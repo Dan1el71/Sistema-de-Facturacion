@@ -115,7 +115,6 @@ const RegisterClient = () => {
           type="submit"
         >
           <i className="bi bi-play-fill"></i>
-          Registrar
         </button>
       </form>
     </div>

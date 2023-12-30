@@ -78,12 +78,12 @@ const FacturacionPage = () => {
       <div className="text-center m-2 ">
         <h1 className="text-xl font-semibold p-4">Facturacion</h1>
       </div>
-      <div>
-        <ClientSearch
-          title="Seleccione un cliente"
-          setIdData={setIdData}
-          setTableData={setTableData}
-        />
+      <div className='mx-12 my-4'>
+        <h2>
+          <i className="pr-2 bi bi-search" />
+          Seleccionar cliente
+        </h2>
+        <ClientSearch setIdData={setIdData} setTableData={setTableData} />
       </div>
       {idData.length > 0 && (
         <div className="mx-12">

@@ -102,7 +102,6 @@ export type ProductTableProps = {
   >
 }
 export type ClientSearchProps = {
-  title: string
   setIdData: React.Dispatch<React.SetStateAction<Client[]>>
   setTableData?: React.Dispatch<React.SetStateAction<Invoice[]>>
 }

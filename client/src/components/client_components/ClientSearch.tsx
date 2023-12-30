@@ -4,11 +4,7 @@ import { ClientSearchProps, Identification } from '../../types/types'
 import Error from '../Error'
 import { AxiosError } from 'axios'
 
-const ClientSearch = ({
-  title,
-  setIdData,
-  setTableData,
-}: ClientSearchProps) => {
+const ClientSearch = ({ setIdData, setTableData }: ClientSearchProps) => {
   const [id, setId] = useState<string | null>(null)
   const [idType, setIdType] = useState<number | null>(null)
   const [error, setError] = useState(false)
@@ -79,11 +75,7 @@ const ClientSearch = ({
   }, [])
 
   return (
-    <div className="my-4 mx-12">
-      <h2>
-        <i className="pr-2 bi bi-search" />
-        {title}
-      </h2>
+    <div>
       <form onSubmit={handleSubmit}>
         <select
           name="idType"
