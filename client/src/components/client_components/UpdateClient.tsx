@@ -1,8 +1,8 @@
-import { Client } from '../../types/types'
+import { Client, UpdateClientsProps } from '../../types/types'
 import ClientSearch from './ClientSearch'
 import { useState } from 'react'
 
-const UpdateClient = () => {
+const UpdateClient = ({ identificationTypes }: UpdateClientsProps) => {
   const [idData, setIdData] = useState<Client[]>([])
 
   return (
@@ -12,7 +12,10 @@ const UpdateClient = () => {
           <i className="pr-2 bi bi-person-plus" />
           Modificar cliente
         </h2>
-        <ClientSearch setIdData={setIdData} />
+        <ClientSearch
+          identificationTypes={identificationTypes}
+          setIdData={setIdData}
+        />
       </div>
 
       {Object.keys(idData).length > 0 && <div className=""></div>}

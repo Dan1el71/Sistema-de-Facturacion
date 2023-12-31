@@ -1,14 +1,9 @@
-import { useEffect, useState } from 'react'
-import { getIdTypes, newClient } from '../../api/client'
-import { Identification } from '../../types/types'
+import { newClient } from '../../api/client'
+import { Identification, RegisterClientProps } from '../../types/types'
 import Swal from 'sweetalert2'
 import { AxiosError } from 'axios'
 
-const RegisterClient = () => {
-  const [identificationTypes, setIdentificationTypes] = useState<
-    Identification[]
-  >([])
-
+const RegisterClient = ({ identificationTypes }: RegisterClientProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
@@ -50,18 +45,6 @@ const RegisterClient = () => {
       }
     }
   }
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const types = await getIdTypes()
-        setIdentificationTypes(types.data.idTypes)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    fetchData()
-  }, [])
 
   return (
     <div className="w-11/12">

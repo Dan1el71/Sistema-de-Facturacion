@@ -101,9 +101,18 @@ export type ProductTableProps = {
     >
   >
 }
+export type UpdateClientsProps = {
+  identificationTypes: Identification[]
+}
+
+export type RegisterClientProps = {
+  identificationTypes: Identification[]
+}
+
 export type ClientSearchProps = {
   setIdData: React.Dispatch<React.SetStateAction<Client[]>>
   setTableData?: React.Dispatch<React.SetStateAction<Invoice[]>>
+  identificationTypes: Identification[]
 }
 
 export type FooterCellProps = {

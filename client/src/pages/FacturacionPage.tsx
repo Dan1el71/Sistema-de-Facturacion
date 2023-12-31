@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Client, Invoice, InvoiceDetails } from '../types/types'
+import { useEffect, useState } from 'react'
+import { Client, Identification, Invoice, InvoiceDetails } from '../types/types'
 import ClientSearch from '../components/client_components/ClientSearch'
 import ProductTable from '../components/products_components/ProductTable'
 import Swal from 'sweetalert2'
@@ -7,10 +7,14 @@ import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import autoTable from 'jspdf-autotable'
 import { newInvoiceDetails } from '../api/product'
+import { getIdTypes } from '../api/client'
 
 const FacturacionPage = () => {
   const [idData, setIdData] = useState<Client[]>([])
   const [tableData, setTableData] = useState<Invoice[]>([])
+  const [identificationTypes, setIdentificationTypes] = useState<
+    Identification[]
+  >([])
 
   const exportPDF = () => {
     const total = tableData
@@ -73,17 +77,34 @@ const FacturacionPage = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const types = await getIdTypes()
+        setIdentificationTypes(types.data.idTypes)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className="flex-auto overflow-y-scroll h-screen">
       <div className="text-center m-2 ">
         <h1 className="text-xl font-semibold p-4">Facturacion</h1>
       </div>
-      <div className='mx-12 my-4'>
+      <div className="mx-12 my-4">
         <h2>
           <i className="pr-2 bi bi-search" />
           Seleccionar cliente
         </h2>
-        <ClientSearch setIdData={setIdData} setTableData={setTableData} />
+        <ClientSearch
+          setIdData={setIdData}
+          setTableData={setTableData}
+          identificationTypes={identificationTypes}
+        />
       </div>
       {idData.length > 0 && (
         <div className="mx-12">

@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react'
-import { getClientById, getIdTypes } from '../../api/client'
+import { useState } from 'react'
+import { AxiosError } from 'axios'
+import { getClientById } from '../../api/client'
 import { ClientSearchProps, Identification } from '../../types/types'
 import Error from '../Error'
-import { AxiosError } from 'axios'
 
-const ClientSearch = ({ setIdData, setTableData }: ClientSearchProps) => {
+const ClientSearch = ({
+  setIdData,
+  setTableData,
+  identificationTypes,
+}: ClientSearchProps) => {
   const [id, setId] = useState<string | null>(null)
   const [idType, setIdType] = useState<number | null>(null)
   const [error, setError] = useState(false)
-  const [identificationTypes, setIdentificationTypes] = useState<
-    Identification[]
-  >([])
 
   const handleIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIdData([])
@@ -60,19 +61,6 @@ const ClientSearch = ({ setIdData, setTableData }: ClientSearchProps) => {
       }
     }
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const types = await getIdTypes()
-        setIdentificationTypes(types.data.idTypes)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    fetchData()
-  }, [])
 
   return (
     <div>
