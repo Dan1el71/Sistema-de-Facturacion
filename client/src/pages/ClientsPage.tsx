@@ -14,6 +14,7 @@ const ClientsPage = () => {
   const [identificationTypes, setIdentificationTypes] = useState<
     Identification[]
   >([])
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,20 +36,28 @@ const ClientsPage = () => {
       </div>
 
       <div id="Consultar" className="mx-12 my-4">
-        <h2>
-          <button>
-            <i className="bi bi-signpost"></i>
-          </button>
+        <div onClick={() => setModal(!modal)} className='flex cursor-pointer w-fit'>
           <i className="pr-2 bi bi-search" />
-          Consultar cliente
-        </h2>
-        <ClientSearch
-          identificationTypes={identificationTypes}
-          setIdData={setIdData}
-        />
-        <div>
-          {Object.keys(idData).length > 0 && <ClientTable data={idData} />}
+          <h2>Consultar cliente</h2>
+          <button className="px-2">
+            {modal ? (
+              <i className="bi bi-caret-up-fill" />
+            ) : (
+              <i className="bi bi-caret-down-fill" />
+            )}
+          </button>
         </div>
+        {modal && (
+          <>
+            <ClientSearch
+              identificationTypes={identificationTypes}
+              setIdData={setIdData}
+            />
+            <div>
+              {Object.keys(idData).length > 0 && <ClientTable data={idData} />}
+            </div>
+          </>
+        )}
       </div>
 
       {role === 1 && (

@@ -68,7 +68,7 @@ const ClientSearch = ({
         <select
           name="idType"
           required
-          className="bg-[#161b22] p-1 ml-1  rounded-md mr-6 mt-6 mb-2 border border-gray-600"
+          className="bg-[#161b22] p-1 ml-1 mb-1 rounded-md mr-6 mt-6 border border-gray-600"
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             setIdData([])
             setIdType(Number(e.target.value))
@@ -86,7 +86,7 @@ const ClientSearch = ({
           ))}
         </select>
         <input
-          className="rounded-md px-3 py-[3px] mt-1 mb-4 bg-[#0D1117] border border-[#30363D]"
+          className="rounded-md px-3 py-[3px] mt-1 bg-[#0D1117] border border-[#30363D]"
           type="text"
           name="id"
           value={id || ''}
