@@ -99,7 +99,7 @@ const ProductTable = ({ tableData, setTableData }: ProductTableProps) => {
         try {
           const productInfo: Product = await (
             await getProductById(id)
-          ).data.productFound
+          ).data.product
 
           const isProductAlreadyAdded = Object.values(tableData).some(
             (row) => row.id_product === productInfo.id
