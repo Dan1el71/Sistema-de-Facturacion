@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { Invoice, Product, ProductTableProps } from '../../types/types'
 import defaultColumn from './DefaultColumn'
 import EditCell from './EditCellColumn'
-import { FooterCell } from './FooterCell'
+import { FooterCell } from '../products_components/FooterCell'
 import { getProductById } from '../../api/product'
 
 const columnHelper = createColumnHelper<Invoice>()

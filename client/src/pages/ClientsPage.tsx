@@ -3,10 +3,41 @@ import { useEffect, useState } from 'react'
 import { Client, Identification } from '../types/types'
 import { getIdTypes } from '../api/client'
 import { useAuthStore } from '../store/auth'
-import ClientTable from '../components/client_components/ClientTable'
 import ClientSearch from '../components/client_components/ClientSearch'
 import RegisterClient from '../components/client_components/RegisterClient'
 import UpdateClient from '../components/client_components/UpdateClient'
+import ItemInfoTable from '../components/ItemTable'
+import { createColumnHelper } from '@tanstack/react-table'
+import ToggleSection from '../components/ToggleSection'
+
+const columnHelper = createColumnHelper<Client>()
+
+const columns = [
+  columnHelper.accessor('client', {
+    cell: (info) => info.getValue(),
+    header: 'Cliente',
+  }),
+  columnHelper.accessor('identification_type', {
+    cell: (info) => info.getValue(),
+    header: 'Tipo de identificación',
+  }),
+  columnHelper.accessor('identification', {
+    cell: (info) => info.getValue(),
+    header: 'Identificación',
+  }),
+  columnHelper.accessor('social_reason', {
+    cell: (info) => info.getValue(),
+    header: 'Razón social',
+  }),
+  columnHelper.accessor('register_date', {
+    cell: (info) => info.getValue(),
+    header: 'Fecha de registro',
+  }),
+  columnHelper.accessor('state', {
+    cell: (info) => info.getValue(),
+    header: 'Estado',
+  }),
+]
 
 const ClientsPage = () => {
   const [idData, setIdData] = useState<Client[]>([])
@@ -14,7 +45,6 @@ const ClientsPage = () => {
   const [identificationTypes, setIdentificationTypes] = useState<
     Identification[]
   >([])
-  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,38 +65,34 @@ const ClientsPage = () => {
         <h1 className="text-xl font-semibold p-4">Clientes</h1>
       </div>
 
-      <div id="Consultar" className="mx-12 my-4">
-        <div onClick={() => setModal(!modal)} className='flex cursor-pointer w-fit'>
-          <i className="pr-2 bi bi-search" />
-          <h2>Consultar cliente</h2>
-          <button className="px-2">
-            {modal ? (
-              <i className="bi bi-caret-up-fill" />
-            ) : (
-              <i className="bi bi-caret-down-fill" />
-            )}
-          </button>
-        </div>
-        {modal && (
+      <div id="Consultar">
+        <ToggleSection title="Consultar cliente" icon="pr-2 bi bi-search">
           <>
             <ClientSearch
               identificationTypes={identificationTypes}
               setIdData={setIdData}
             />
-            <div>
-              {Object.keys(idData).length > 0 && <ClientTable data={idData} />}
-            </div>
+            {Object.keys(idData).length > 0 && (
+              <ItemInfoTable data={idData} columns={columns} />
+            )}
           </>
-        )}
+        </ToggleSection>
       </div>
 
       {role === 1 && (
         <div>
-          <div id="Registrar" className="my-6 mx-12 flex">
-            <RegisterClient identificationTypes={identificationTypes} />
+          <div id="Registrar" className="flex">
+            <ToggleSection
+              title="Registrar cliente"
+              icon="pr-2 bi bi-person-plus"
+            >
+              <RegisterClient identificationTypes={identificationTypes} />
+            </ToggleSection>
           </div>
           <div id="Modificar">
-            <UpdateClient identificationTypes={identificationTypes} />
+            <ToggleSection title="Modificar cliente" icon="bi bi-pencil">
+              <UpdateClient identificationTypes={identificationTypes} />
+            </ToggleSection>
           </div>
         </div>
       )}

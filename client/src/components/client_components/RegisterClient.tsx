@@ -1,121 +1,60 @@
+import Swal from 'sweetalert2'
 import { newClient } from '../../api/client'
 import { Identification, RegisterClientProps } from '../../types/types'
-import Swal from 'sweetalert2'
-import { AxiosError } from 'axios'
-import { useState } from 'react'
+import RegisterForm from '../RegisterForm'
+import { handleApiError } from '../../api/utils'
 
 const RegisterClient = ({ identificationTypes }: RegisterClientProps) => {
-  const [modal, setModal] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async (formData: Record<string, string>) => {
     try {
-      const identification_type = parseInt(
-        (e.currentTarget[0] as HTMLInputElement).value
+      const { identification, social_reason, state, identification_type } =
+        formData
+
+      console.log(
+        identification,
+        social_reason,
+        state,
+        parseInt(identification_type)
       )
-      const { value: identification } = e.currentTarget[1] as HTMLInputElement
-      const { value: social_reason } = e.currentTarget[2] as HTMLInputElement
-      const { value: state } = e.currentTarget[3] as HTMLInputElement
 
       await newClient({
-        identification_type,
+        identification_type: parseInt(identification_type),
         identification,
         social_reason,
         state,
       })
+
       const alert = await Swal.fire({
         title: 'Hecho!',
         text: 'Cliente creado correctamente',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       })
+
       if (alert.isConfirmed) {
         window.location.reload()
       }
     } catch (err) {
-      if (err instanceof AxiosError) {
-        const errorMessage =
-          err.response?.status === 400 ? 'El cliente ya existe' : 'Error'
-        await Swal.fire({
-          title: 'Error!',
-          text: errorMessage,
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        })
-        window.location.reload()
-      } else {
-        console.error(err)
-      }
+      handleApiError(err, 'El cliente ya existe')
     }
   }
 
-  return (
-    <div className="w-11/12">
-      <div
-        className="flex cursor-pointer w-fit"
-        onClick={() => setModal(!modal)}
-      >
-        <i className="pr-2 bi bi-person-plus" />
-        <h2>Registrar cliente</h2>
-        <button className="px-2">
-          {modal ? (
-            <i className="bi bi-caret-up-fill" />
-          ) : (
-            <i className="bi bi-caret-down-fill" />
-          )}
-        </button>
-      </div>
-      {modal && (
-        <form
-          onSubmit={handleSubmit}
-          className="flex gap-6 mt-6 text-center flex-col  md:flex-row"
-        >
-          <select
-            name="idType"
-            required
-            className="bg-[#161b22] p-1 m-1 rounded-md border border-gray-600"
-          >
-            <option value="" label="" />
-            {identificationTypes.map((id: Identification) => (
-              <option
-                key={id.abreviature}
-                value={id.identification_type}
-                label={id.abreviature}
-              >
-                {id.abreviature}
-              </option>
-            ))}
-          </select>
-          <input
-            required
-            placeholder="Identificación"
-            className="flex-1 text-center rounded-md px-3 py-[3px] m-1 bg-[#0D1117] border border-[#30363D]"
-            id="identification"
-            type="number"
-          />
-          <input
-            required
-            placeholder="Razón social"
-            className="flex-1 text-center rounded-md px-3 py-[3px] mb-1 mt-1 bg-[#0D1117] border border-[#30363D]"
-            id="social_reason"
-            type="text"
-          />
-          <input
-            required
-            placeholder="Estado"
-            className="flex-1 text-center rounded-md px-3 py-[3px] mb-1 mt-1 bg-[#0D1117] border border-[#30363D]"
-            id="state"
-            type="number"
-          />
-          <button
-            className="rounded-md px-3 mb-1 mt-1 bg-green-button hover:green-button-hover border border-[#30363D]"
-            type="submit"
-          >
-            <i className="bi bi-play-fill"></i>
-          </button>
-        </form>
-      )}
-    </div>
-  )
+  const fields = [
+    {
+      name: 'identification_type',
+      placeholder: 'Tipo de Identificación',
+      type: 'select',
+      options: identificationTypes.map((id: Identification) => ({
+        value: id.identification_type.toString(),
+        label: id.abreviature,
+      })),
+    },
+    { name: 'identification', placeholder: 'Identificación', type: 'number' },
+    { name: 'social_reason', placeholder: 'Razón social', type: 'text' },
+    { name: 'state', placeholder: 'Estado', type: 'number' },
+  ]
+
+  return <RegisterForm fields={fields} onSubmit={onSubmit} />
 }
+
 export default RegisterClient

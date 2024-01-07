@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Row } from '@tanstack/react-table'
+import { ColumnDef, Row } from '@tanstack/react-table'
 import { RowData, Table } from '@tanstack/react-table'
 
 export type State = {
@@ -38,10 +38,10 @@ export type Client = {
 }
 
 export type Product = {
-  id: number
   name: string
   state: string
   unit_price: number
+  id?: number
 }
 
 export type Invoice = {
@@ -66,6 +66,30 @@ export type newClientType = {
   identification: string
   social_reason: string
   state: string
+}
+
+export interface ItemTableProps {
+  data: Product[] | Client[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<any, any>[]
+}
+
+export interface ToggleSectionProps {
+  title: string
+  icon: string
+  children: React.ReactNode
+}
+
+export interface FormField {
+  name: string
+  placeholder: string
+  type: string
+  options?: { value: string; label: string }[]
+}
+
+export interface GenericFormProps {
+  fields: FormField[]
+  onSubmit: (formData: Record<string, string>) => Promise<void>
 }
 
 declare module '@tanstack/react-table' {

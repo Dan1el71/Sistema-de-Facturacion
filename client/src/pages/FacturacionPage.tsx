@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Client, Identification, Invoice, InvoiceDetails } from '../types/types'
 import ClientSearch from '../components/client_components/ClientSearch'
-import ProductTable from '../components/products_components/ProductTable'
+import ProductTable from '../components/report_components/InvoiceTable'
 import Swal from 'sweetalert2'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
