@@ -38,7 +38,7 @@ const RegisterProduct = () => {
     {
       name: 'state',
       placeholder: 'Estado',
-      type: 'number',
+      type: 'text',
     },
     {
       name: 'unit_price',
