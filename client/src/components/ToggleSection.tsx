@@ -10,7 +10,7 @@ const ToggleSection = ({ title, icon, children }: ToggleSectionProps) => {
         onClick={() => setModal(!modal)}
         className="flex cursor-pointer w-fit"
       >
-        <i className={`${icon} pr-2`} />
+        <i className={`${icon} pr-4`} />
         <h2>{title}</h2>
         <button className="px-2">
           {modal ? (
