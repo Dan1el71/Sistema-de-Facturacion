@@ -1,5 +1,6 @@
 import ProductSearch from '../components/products_components/ProductSearch'
 import RegisterProduct from '../components/products_components/RegisterProduct'
+import UpdateProduct from '../components/products_components/UpdateProduct'
 import ToggleSection from '../components/ToggleSection'
 
 const ProdutsPage = () => {
@@ -9,13 +10,18 @@ const ProdutsPage = () => {
         <h1 className="text-xl font-semibold p-4">Productos</h1>
       </div>
       <div id="Consultar">
-        <ToggleSection title="Consultar producto" icon="pr-2 bi bi-search">
+        <ToggleSection title="Consultar producto" icon="bi bi-search">
           <ProductSearch />
         </ToggleSection>
       </div>
       <div id="Registrar">
-        <ToggleSection title="Registrar producto" icon="pr-2 bi bi-person-plus">
+        <ToggleSection title="Registrar producto" icon="bi bi-person-plus">
           <RegisterProduct />
+        </ToggleSection>
+      </div>
+      <div id="Modificar">
+        <ToggleSection title="Modificar producto" icon="bi bi-pencil">
+          <UpdateProduct />
         </ToggleSection>
       </div>
     </div>
