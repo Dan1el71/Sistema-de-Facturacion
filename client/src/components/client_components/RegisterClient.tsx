@@ -10,13 +10,6 @@ const RegisterClient = ({ identificationTypes }: RegisterClientProps) => {
       const { identification, social_reason, state, identification_type } =
         formData
 
-      console.log(
-        identification,
-        social_reason,
-        state,
-        parseInt(identification_type)
-      )
-
       await newClient({
         identification_type: parseInt(identification_type),
         identification,
