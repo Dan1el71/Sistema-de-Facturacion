@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { getProductById } from '../../api/product'
+import { getProductById, updateProduct } from '../../api/product'
 import Error from '../Error'
+import Swal from 'sweetalert2'
 
 const UpdateProduct = () => {
+  const [productID, setProductID] = useState<string>('')
   const [product, setProduct] = useState<Record<string, string>>({})
   const [error, setError] = useState(false)
 
@@ -29,8 +31,7 @@ const UpdateProduct = () => {
     setError(false)
 
     try {
-      const id = parseInt((e.currentTarget[0] as HTMLInputElement).value)
-      const response = await getProductById(id)
+      const response = await getProductById(parseInt(productID))
       setProduct(response.data.product)
     } catch (err) {
       setError(true)
@@ -46,20 +47,39 @@ const UpdateProduct = () => {
     })
   }
 
-  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const { name, state, unit_price } = product
 
-      console.log(name, state, parseInt(unit_price))
-      
-      
+    try {
+      await updateProduct(parseInt(productID), {
+        name,
+        state,
+        unit_price: parseInt(unit_price),
+      })
+
+      await Swal.fire({
+        title: 'Hecho!',
+        text: 'Producto actualizado',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      })
+    } catch (err) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'No se pudo actualizar el producto',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      })
+    }
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <input
+          onChange={(e) => setProductID(e.target.value)}
           className="rounded-md px-3 py-[3px] m-1 mt-6 bg-[#0D1117] border border-[#30363D]"
           type="number"
           name="productID"
@@ -78,7 +98,7 @@ const UpdateProduct = () => {
           </div>
         )}
       </form>
-      {product && (
+      {Object.keys(product).length > 0 && (
         <form onSubmit={handleUpdate}>
           {fields.map((field) => (
             <input

@@ -12,3 +12,7 @@ export const newInvoiceDetails = async (data: InvoiceDetails) => {
 export const newProduct = async (data: Product) => {
   return axios.post('/product/', data)
 }
+
+export const updateProduct = async (id: number, data: Product) => {
+  return axios.put('/product/' + id, data)
+}
