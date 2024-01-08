@@ -35,6 +35,18 @@ export const newProfile = async (
   }
 }
 
+export const getAllProfiles = async (req: Request, res: Response) => {
+  try {
+    const profiles = await prisma.profile.findMany()
+
+    return res.status(200).json({
+      profiles,
+    })
+  } catch (err) {
+    handleError(res, err)
+  }
+}
+
 export const getProfile = async (
   req: Request<getProfileSchemaType, any, any>,
   res: Response
