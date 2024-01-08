@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { getProductById } from '../../api/product'
 import { Product } from '../../types/types'
-import ItemInfoTable from '../ItemTable'
+import ItemTable from '../ItemTable'
 import { createColumnHelper } from '@tanstack/react-table'
 import Error from '../Error'
 
@@ -36,8 +36,7 @@ const ProductSearch = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(false)
+    e.preventDefault() < setError(false)
 
     try {
       const response = await getProductById(parseInt(productId))
@@ -68,7 +67,7 @@ const ProductSearch = () => {
 
       {Object.keys(productData).length > 0 && (
         <>
-          <ItemInfoTable data={productData} columns={columns} />
+          <ItemTable data={productData} columns={columns} />
         </>
       )}
     </div>
