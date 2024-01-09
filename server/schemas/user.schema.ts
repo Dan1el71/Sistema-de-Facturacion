@@ -7,7 +7,11 @@ export const newUserSchema = z.object({
         .string()
         .min(2, { message: 'Name must be at least 2 characters long' })
         .max(45),
-      middle_name: z.string().min(4).max(45).optional(),
+      middle_name: z
+        .string()
+        .min(4, { message: 'Middle name must be at least 4 characters long' })
+        .max(45)
+        .optional(),
       user: z
         .string()
         .min(4, { message: 'Username must be at least 4 characters long' })
