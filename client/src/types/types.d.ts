@@ -4,22 +4,31 @@ import { RowData, Table } from '@tanstack/react-table'
 
 export type State = {
   token: string
-  profile: User | null
+  profile: Profile | null
   isAuth: boolean
 }
 
 export type Actions = {
   setToken: (token: string) => void
-  setProfile: (profile: User) => void
+  setProfile: (profile: Profile) => void
   logout: () => void
 }
 
-export type User = {
+export type Profile = {
   _id: number
   name: string
   role: number
   iat: number
   exp: number
+}
+
+export type User = {
+  name: string
+  middle_name: string | null
+  user: string
+  id_profile: number
+  id_user?: number
+  password?: string
 }
 
 export type Identification = {
@@ -38,10 +47,10 @@ export type Client = {
 }
 
 export type Product = {
+  id: number
   name: string
   state: string
   unit_price: number
-  id?: number
 }
 
 export type Invoice = {
@@ -69,7 +78,7 @@ export type newClientType = {
 }
 
 export interface ItemTableProps {
-  data: Product[] | Client[]
+  data: Product[] | Client[] | User[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<any, any>[]
 }
@@ -85,11 +94,13 @@ export interface FormField {
   placeholder: string
   type: string
   options?: { value: string; label: string }[]
+  notRequired?: boolean
 }
 
 export interface GenericFormProps {
   fields: FormField[]
   onSubmit: (formData: Record<string, string>) => Promise<void>
+  notRequired?: boolean
 }
 
 declare module '@tanstack/react-table' {
