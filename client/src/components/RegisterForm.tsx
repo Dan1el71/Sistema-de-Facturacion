@@ -35,7 +35,7 @@ const RegisterForm = ({ fields, onSubmit }: GenericFormProps) => {
               <select
                 key={field.name}
                 name={field.name}
-                required
+                required={field.notRequired ? false : true}
                 value={formData[field.name] || ''}
                 onChange={handleChange}
                 className="bg-[#161b22] p-1 m-1 rounded-md border border-gray-600"
@@ -56,7 +56,7 @@ const RegisterForm = ({ fields, onSubmit }: GenericFormProps) => {
             return (
               <input
                 key={field.name}
-                required
+                required={field.notRequired ? false : true}
                 placeholder={field.placeholder}
                 className="flex-1 text-center rounded-md px-3 py-[3px] m-1 bg-[#0D1117] border border-[#30363D]"
                 name={field.name}
