@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Actions, State, User } from '../types/types'
+import { Actions, State, Profile } from '../types/types'
 
 export const useAuthStore = create(
   persist<State & Actions>(
@@ -13,7 +13,7 @@ export const useAuthStore = create(
           token,
           isAuth: true,
         })),
-      setProfile: (profile: User) =>
+      setProfile: (profile: Profile) =>
         set(() => ({
           profile,
         })),
