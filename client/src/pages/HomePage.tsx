@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/auth'
 const HomePage = () => {
   const user = useAuthStore((state) => state.profile)
   const rol = user?.role
-  const name = user?.name.toUpperCase()
+  const name = user?.name?.toUpperCase()
 
   return (
     <div className="m-auto">
