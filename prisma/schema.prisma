@@ -1,18 +1,19 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
   id_user     Int     @id @default(autoincrement())
-  name        String  @db.VarChar(45)
-  middle_name String? @db.VarChar(45)
-  user        String  @db.VarChar(45)
-  password    String  @db.VarChar(80)
+  name        String
+  middle_name String?
+  user        String
+  password    String
   id_profile  Int
 
   profile Profile @relation(fields: [id_profile], references: [id_profile])
@@ -20,17 +21,17 @@ model User {
 
 model Profile {
   id_profile Int    @id @default(autoincrement())
-  name       String @db.VarChar(45)
+  name       String
   user       User[]
 }
 
 model Client {
   client              Int       @id @default(autoincrement())
   identification_type Int?
-  identification      String?   @db.VarChar(100)
-  social_reason       String?   @db.VarChar(100)
-  register_date       DateTime? @default(now()) @db.Date
-  state               String    @db.VarChar(1)
+  identification      String?
+  social_reason       String?
+  register_date       DateTime? @default(now())
+  state               String
 
   recipe  Invoice[]
   id_type Identification_Type? @relation(fields: [identification_type], references: [identification_type])
@@ -38,8 +39,8 @@ model Client {
 
 model Identification_Type {
   identification_type Int     @id @default(autoincrement())
-  abreviature         String  @db.VarChar(3)
-  description         String? @db.VarChar(100)
+  abreviature         String
+  description         String?
 
   Client Client[]
 }
@@ -47,7 +48,7 @@ model Identification_Type {
 model Invoice {
   consecutive Int      @id @default(autoincrement())
   client      Int
-  date        DateTime @default(now()) @db.Date
+  date        DateTime @default(now())
 
   clients Client @relation(fields: [client], references: [client])
 
@@ -56,8 +57,8 @@ model Invoice {
 
 model Product {
   id         Int    @id @default(autoincrement())
-  name       String @db.VarChar(100)
-  state      String @db.VarChar(45)
+  name       String
+  state      String
   unit_price Int
 
   Recipe_Details InvoiceDetails[]
