@@ -1,7 +1,19 @@
+import { createClient } from '@libsql/client/.'
+import { PrismaLibSQL } from '@prisma/adapter-libsql'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { TURSO_AUTH_TOKEN, TURSO_DATABASE_URL } from './config'
 
-const prisma = new PrismaClient().$extends({
+const libsql = createClient({
+  url: TURSO_DATABASE_URL,
+  authToken: TURSO_AUTH_TOKEN,
+})
+
+const adapter = new PrismaLibSQL(libsql)
+
+const prisma = new PrismaClient({
+  adapter,
+}).$extends({
   model: {
     user: {
       async createUser(
