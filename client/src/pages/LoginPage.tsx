@@ -7,8 +7,8 @@ import { AxiosError } from 'axios'
 import Error from '../components/Error'
 
 const LoginPage = () => {
-  const [user, setUser] = useState('')
-  const [password, setPassword] = useState('')
+  const [user, setUser] = useState('Prueba')
+  const [password, setPassword] = useState('Prueba')
   const [error, setError] = useState(false)
   const token = useAuthStore((status) => status.token)
   const setToken = useAuthStore((status) => status.setToken)
